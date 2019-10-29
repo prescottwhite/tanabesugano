@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Tanabe Sugano Diagram Slider</string>
+    <string-array name="diagrams_array">
+        <item>D2</item>
+        <item>D3</item>
+        <item>D4</item>
+        <item>D5</item>
+        <item>D6</item>
+        <item>D7</item>
+        <item>D8</item>
+    </string-array>
 </resources>
