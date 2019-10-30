@@ -8,6 +8,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 
 import com.jjoe64.graphview.GraphView;
@@ -17,6 +18,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 public class MainActivity extends AppCompatActivity {
 
     Spinner diagramDropdown;
+    GraphView graph;
+    LineGraphSeries<DataPoint> seek_series;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         diagramDropdown.setAdapter(adapter);
 
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        graph = (GraphView) findViewById(R.id.graph);
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 10),
                 new DataPoint(8, 20),
@@ -46,5 +49,28 @@ public class MainActivity extends AppCompatActivity {
         });
         graph.addSeries(series);
         graph.addSeries(series2);
+
+        SeekBar seekBar = findViewById(R.id.seek_x);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                graph.removeSeries(seek_series);
+                seek_series = new LineGraphSeries<>(new DataPoint[] {
+                        new DataPoint(progress, 0),
+                        new DataPoint(progress, graph.getY())
+                });
+                graph.addSeries(seek_series);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 }
