@@ -24,6 +24,14 @@
         android:progressTint="#00FFFFFF"
         android:layout_marginStart="10dp"/>
 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/ratio_hint"
+        android:inputType="numberDecimal" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
