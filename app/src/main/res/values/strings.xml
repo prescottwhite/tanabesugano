@@ -9,4 +9,8 @@
         <item>D7</item>
         <item>D8</item>
     </string-array>
+    <string name="radio_choice">Mock Choice Selector</string>
+    <string name="button_1">Choice #1</string>
+    <string name="button_2">Choice #2</string>
+
 </resources>

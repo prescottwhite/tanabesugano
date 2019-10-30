@@ -12,4 +12,40 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph"
+        android:layout_width="match_parent"
+        android:layout_height="450dp" />
+
+    <SeekBar
+        android:id="@+id/seek_x"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progressTint="#00FFFFFF"
+        android:layout_marginStart="10dp"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/radio_choice" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_1" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_2" />
+    </RadioGroup>
+
 </LinearLayout>
