@@ -10,10 +10,15 @@
         <item>D8</item>
     </string-array>
 
-<!--mock stuff below-->
+    <!--mock stuff below-->
+    <string name="ratio_hint">Enter Ratio</string>
+
     <string name="radio_choice">Mock Choice Selector</string>
     <string name="button_1">Choice #1</string>
     <string name="button_2">Choice #2</string>
-    <string name="ratio_hint">Enter Ratio</string>
+
+    <string name="switch_1">Switch #1</string>
+    <string name="switch_2">Switch #2</string>
+    <!--mock stuff above-->
 
 </resources>
