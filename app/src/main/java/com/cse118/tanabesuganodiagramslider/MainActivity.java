@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     SeekBar mSeekBar;
     EditText mEditText;
-    TextView mTextView;
     RadioButton mRadio1;
     RadioButton mRadio2;
     Switch mSwitch1;
@@ -67,14 +66,13 @@ public class MainActivity extends AppCompatActivity {
 
         mSeekBar = findViewById(R.id.seek_x);
 
-        mTextView = findViewById(R.id.textView);
         mEditText = findViewById(R.id.editText);
         mRadio1 = findViewById(R.id.radioButton);
         mRadio2 = findViewById(R.id.radioButton2);
         mSwitch1 = findViewById(R.id.switch1);
         mSwitch2 = findViewById(R.id.switch2);
         mToggleButton = findViewById(R.id.toggleButton);
-        final View[] views = {mDiagramDropdown, mTextView, mEditText, mRadio1, mRadio2, mSwitch1, mSwitch2, mToggleButton};
+        final View[] views = {mDiagramDropdown, mEditText, mRadio1, mRadio2, mSwitch1, mSwitch2, mToggleButton};
 
         SeekBar seekBar = findViewById(R.id.seek_x);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
