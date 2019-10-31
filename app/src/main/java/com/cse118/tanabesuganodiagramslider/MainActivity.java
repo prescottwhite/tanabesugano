@@ -3,7 +3,14 @@ package com.cse118.tanabesuganodiagramslider;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteCursorDriver;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQuery;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.method.KeyListener;
+import android.view.KeyEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -28,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     LineGraphSeries<DataPoint> mSeek_series;
 
     SeekBar mSeekBar;
+    TextView mRatioText;
     EditText mEditText;
     RadioButton mRadio1;
     RadioButton mRadio2;
@@ -66,7 +74,9 @@ public class MainActivity extends AppCompatActivity {
 
         mSeekBar = findViewById(R.id.seek_x);
 
+        mRatioText = findViewById(R.id.ratio);
         mEditText = findViewById(R.id.editText);
+
         mRadio1 = findViewById(R.id.radioButton);
         mRadio2 = findViewById(R.id.radioButton2);
         mSwitch1 = findViewById(R.id.switch1);
@@ -96,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 showViews(views);
             }
         });
+        
     }
 
     void hideViews(View[] views) {
