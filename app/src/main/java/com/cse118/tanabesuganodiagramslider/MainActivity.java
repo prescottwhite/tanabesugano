@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 showViews(views);
             }
         });
-        
+
     }
 
     void hideViews(View[] views) {
