@@ -10,8 +10,16 @@
     <Spinner
         android:id="@+id/select_diagram"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:spinnerMode="dropdown" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/ratio_hint"
+        android:inputType="numberDecimal" />
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
@@ -27,19 +35,6 @@
         android:max="40"
         android:progress="25"
         android:progressTint="#00FFFFFF" />
-
-    <TextView
-        android:id="@+id/ratio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/ratio_hint"
-        android:inputType="numberDecimal" />
 
     <ScrollView
         android:layout_width="match_parent"

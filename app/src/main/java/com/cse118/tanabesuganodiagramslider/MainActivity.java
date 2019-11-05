@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     LineGraphSeries<DataPoint> mSeek_series;
 
     SeekBar mSeekBar;
-    TextView mRatioText;
     EditText mEditText;
     RadioButton mRadio1;
     RadioButton mRadio2;
@@ -53,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
                 R.array.diagrams_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDiagramDropdown.setAdapter(adapter);
+
+        mRadio1 = findViewById(R.id.radioButton);
+        mRadio2 = findViewById(R.id.radioButton2);
+        mSwitch1 = findViewById(R.id.switch1);
+        mSwitch2 = findViewById(R.id.switch2);
+        mToggleButton = findViewById(R.id.toggleButton);
+        final View[] views = {mDiagramDropdown, mRadio1, mRadio2, mSwitch1, mSwitch2, mToggleButton};
 
         mGraph = (GraphView) findViewById(R.id.graph);
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
@@ -72,20 +78,10 @@ public class MainActivity extends AppCompatActivity {
         mGraph.addSeries(series);
         mGraph.addSeries(series2);
 
-        mSeekBar = findViewById(R.id.seek_x);
-
-        mRatioText = findViewById(R.id.ratio);
         mEditText = findViewById(R.id.editText);
 
-        mRadio1 = findViewById(R.id.radioButton);
-        mRadio2 = findViewById(R.id.radioButton2);
-        mSwitch1 = findViewById(R.id.switch1);
-        mSwitch2 = findViewById(R.id.switch2);
-        mToggleButton = findViewById(R.id.toggleButton);
-        final View[] views = {mDiagramDropdown, mEditText, mRadio1, mRadio2, mSwitch1, mSwitch2, mToggleButton};
-
-        SeekBar seekBar = findViewById(R.id.seek_x);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mSeekBar = findViewById(R.id.seek_x);
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mGraph.removeSeries(mSeek_series);
@@ -93,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                         new DataPoint(progress, 0),
                         new DataPoint(progress, 75)
                 });
+                mEditText.setText(Integer.toString(progress));
                 mGraph.addSeries(mSeek_series);
             }
 
