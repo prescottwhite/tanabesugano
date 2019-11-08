@@ -17,6 +17,8 @@ public class Diagram {
     private String mDiagramName;
     private Context mContext;
 
+    private int[] mLineColors;
+
     String[] firstLineCSV;
 
     private treeClass[] treeMapArray;
@@ -25,6 +27,7 @@ public class Diagram {
         mGraph = graph;
         mDiagramName = diagramName;
         mContext = context;
+        mLineColors = mContext.getResources().getIntArray(R.array.lineColors);
         createGraph();
     }
 
@@ -99,6 +102,8 @@ public class Diagram {
 
         for (int i = 0; i < lineGraphSeries.length; i++) {
             mGraph.addSeries(lineGraphSeries[i]);
+            int colorIndex = i % mLineColors.length;
+            lineGraphSeries[i].setColor(mLineColors[colorIndex]);
         }
     }
 }
