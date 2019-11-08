@@ -20,8 +20,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.Map;
 
-import static java.lang.Double.NaN;
-
 public class MainActivity extends AppCompatActivity {
 
     Spinner mDiagramDropdown;
@@ -49,14 +47,12 @@ public class MainActivity extends AppCompatActivity {
         // Line Color List
         mLineColors = this.getResources().getIntArray(R.array.lineColors);
 
-
         // Dropdown menu
         mDiagramDropdown = findViewById(R.id.select_diagram);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.diagrams_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDiagramDropdown.setAdapter(adapter);
-
 
         mHidden = findViewById(R.id.ll_main_hidden);
         mRgLineChoice = findViewById(R.id.rg_main_choices);

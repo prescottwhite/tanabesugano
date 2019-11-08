@@ -13,11 +13,20 @@
         android:layout_height="40dp"
         android:spinnerMode="dropdown" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
     <EditText
         android:id="@+id/editRatio"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:ems="10"
+        android:gravity="left"
         android:hint="@string/ratio_hint"
         android:inputType="numberDecimal" />
 
