@@ -61,22 +61,7 @@ public class MainActivity extends AppCompatActivity {
         final View[] views = {mDiagramDropdown, mRadio1, mRadio2, mSwitch1, mSwitch2, mToggleButton};
 
         mGraph = (GraphView) findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                new DataPoint(0, 10),
-                new DataPoint(8, 20),
-                new DataPoint(15, 30),
-                new DataPoint(25, 40),
-                new DataPoint(40, 50)
-        });
-        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[] {
-                new DataPoint(0, 50),
-                new DataPoint(10, 60),
-                new DataPoint(20, 70),
-                new DataPoint(25, 75),
-                new DataPoint(40, 75)
-        });
-        mGraph.addSeries(series);
-        mGraph.addSeries(series2);
+        Diagram d2 = new Diagram(mGraph, "d2", this);
 
         mEditText = findViewById(R.id.editText);
 
