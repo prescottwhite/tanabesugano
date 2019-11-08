@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import java.util.Arrays;
 import java.util.TreeMap;
 
 public class Diagram {
@@ -17,10 +18,12 @@ public class Diagram {
     private String mDiagramName;
     private Context mContext;
 
+    private int mLength;
     private int[] mLineColors;
 
-    String[] firstLineCSV;
 
+    String[] firstLineCSV; // Remove this?
+    private String[] mLineNames;
     private treeClass[] treeMapArray;
 
     public Diagram(GraphView graph, String diagramName, Context context) {
@@ -70,6 +73,8 @@ public class Diagram {
             line = buffer.readLine();
             String[] tokens = line.split(",");
             firstLineCSV = tokens;
+            mLineNames = Arrays.copyOfRange(tokens, 1, tokens.length);
+            mLength = mLineNames.length;
 
             // Create a new treeMap array based on how many 'y' values are found on each line of csv
             treeMapArray = new treeClass[tokens.length - 1];
@@ -105,5 +110,13 @@ public class Diagram {
             int colorIndex = i % mLineColors.length;
             lineGraphSeries[i].setColor(mLineColors[colorIndex]);
         }
+    }
+
+    public String getLineName(int i) {
+        return mLineNames[i];
+    }
+
+    public int getLength(){
+        return mLength;
     }
 }

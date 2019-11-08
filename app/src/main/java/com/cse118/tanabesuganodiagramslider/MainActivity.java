@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -23,18 +25,26 @@ public class MainActivity extends AppCompatActivity {
     GraphView mGraph;
     LineGraphSeries<DataPoint> mSeek_series;
 
+    private int[] mLineColors;
+
+    LinearLayout mHidden;
     SeekBar mSeekBar;
     EditText mRatioEditText;
-    RadioButton mRadio1;
-    RadioButton mRadio2;
+    RadioGroup mRgLineChoice;
+
     Switch mSwitch1;
     Switch mSwitch2;
     ToggleButton mToggleButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Line Color List
+        mLineColors = this.getResources().getIntArray(R.array.lineColors);
+
 
         // Dropdown menu
         mDiagramDropdown = findViewById(R.id.select_diagram);
@@ -43,17 +53,19 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDiagramDropdown.setAdapter(adapter);
 
-        // Group of views to be hidden
-        mRadio1 = findViewById(R.id.radioButton);
-        mRadio2 = findViewById(R.id.radioButton2);
+
+        mHidden = findViewById(R.id.ll_main_hidden);
+        mRgLineChoice = findViewById(R.id.rg_main_choices);
+
         mSwitch1 = findViewById(R.id.switch1);
         mSwitch2 = findViewById(R.id.switch2);
         mToggleButton = findViewById(R.id.toggleButton);
-        final View[] views = {mDiagramDropdown, mRadio1, mRadio2, mSwitch1, mSwitch2, mToggleButton};
 
         // Creating graph
         mGraph = (GraphView) findViewById(R.id.graph);
         Diagram d2 = new Diagram(mGraph, "d2", this);
+
+        setUpRadioButtons(d2);
         
         mRatioEditText = findViewById(R.id.editRatio);
 
@@ -72,26 +84,32 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                hideViews(views);
+                hideViews();
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                showViews(views);
+                showViews();
             }
         });
 
     }
 
-    void hideViews(View[] views) {
-        for (int i = 0; i < views.length; i++) {
-            views[i].setVisibility(View.INVISIBLE);
-        }
+    void hideViews() {
+        mHidden.setVisibility(View.INVISIBLE);
     }
 
-    void showViews(View[] views) {
-        for (int i = 0; i < views.length; i++) {
-            views[i].setVisibility(View.VISIBLE);
+    void showViews() {
+        mHidden.setVisibility(View.VISIBLE);
+
+    }
+
+    void setUpRadioButtons(Diagram diagram) {
+        for(int i = 0; i < diagram.getLength(); i++) {
+            RadioButton newButton = new RadioButton(this);
+            newButton.setText(diagram.getLineName(i));
+            newButton.setTextColor(mLineColors[i]);
+            mRgLineChoice.addView(newButton);
         }
     }
 }
