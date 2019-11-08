@@ -63,12 +63,12 @@ public class Diagram {
         ) {
             String line = "";
 
-            //Get first line of csv and store in firstLineCSV
+            // Get first line of csv and store in firstLineCSV
             line = buffer.readLine();
             String[] tokens = line.split(",");
             firstLineCSV = tokens;
 
-            //Create a new treeMap array based on how many 'y' values are found on each line of csv
+            // Create a new treeMap array based on how many 'y' values are found on each line of csv
             treeMapArray = new treeClass[tokens.length - 1];
             for (int i = 0; i < treeMapArray.length; i++) {
                 treeMapArray[i] = new treeClass();

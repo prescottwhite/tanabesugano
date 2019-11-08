@@ -36,14 +36,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Dropdown menu
+        // Dropdown menu
         mDiagramDropdown = findViewById(R.id.select_diagram);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.diagrams_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDiagramDropdown.setAdapter(adapter);
 
-        //Group of views to be hidden
+        // Group of views to be hidden
         mRadio1 = findViewById(R.id.radioButton);
         mRadio2 = findViewById(R.id.radioButton2);
         mSwitch1 = findViewById(R.id.switch1);
@@ -51,12 +51,11 @@ public class MainActivity extends AppCompatActivity {
         mToggleButton = findViewById(R.id.toggleButton);
         final View[] views = {mDiagramDropdown, mRadio1, mRadio2, mSwitch1, mSwitch2, mToggleButton};
 
-        //Creating graph
+        // Creating graph
         mGraph = (GraphView) findViewById(R.id.graph);
         Diagram d2 = new Diagram(mGraph, "d2", this);
-
-
-        mRatioEditText = findViewById(R.id.editText);
+        
+        mRatioEditText = findViewById(R.id.editRatio);
 
         mSeekBar = findViewById(R.id.seek_x);
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
