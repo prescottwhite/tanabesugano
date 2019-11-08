@@ -2,25 +2,14 @@ package com.cse118.tanabesuganodiagramslider;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteCursorDriver;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQuery;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.method.KeyListener;
-import android.view.KeyEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.jjoe64.graphview.GraphView;
@@ -35,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     LineGraphSeries<DataPoint> mSeek_series;
 
     SeekBar mSeekBar;
-    EditText mEditText;
+    EditText mRatioEditText;
     RadioButton mRadio1;
     RadioButton mRadio2;
     Switch mSwitch1;
@@ -47,12 +36,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Dropdown menu
         mDiagramDropdown = findViewById(R.id.select_diagram);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.diagrams_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDiagramDropdown.setAdapter(adapter);
 
+        //Group of views to be hidden
         mRadio1 = findViewById(R.id.radioButton);
         mRadio2 = findViewById(R.id.radioButton2);
         mSwitch1 = findViewById(R.id.switch1);
@@ -60,10 +51,12 @@ public class MainActivity extends AppCompatActivity {
         mToggleButton = findViewById(R.id.toggleButton);
         final View[] views = {mDiagramDropdown, mRadio1, mRadio2, mSwitch1, mSwitch2, mToggleButton};
 
+        //Creating graph
         mGraph = (GraphView) findViewById(R.id.graph);
         Diagram d2 = new Diagram(mGraph, "d2", this);
 
-        mEditText = findViewById(R.id.editText);
+
+        mRatioEditText = findViewById(R.id.editText);
 
         mSeekBar = findViewById(R.id.seek_x);
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -74,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                         new DataPoint(progress, 0),
                         new DataPoint(progress, 75)
                 });
-                mEditText.setText(Integer.toString(progress));
+                mRatioEditText.setText(Integer.toString(progress));
                 mGraph.addSeries(mSeek_series);
             }
 
