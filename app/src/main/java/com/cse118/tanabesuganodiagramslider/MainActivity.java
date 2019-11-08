@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mGraph.removeSeries(mSeek_series);
+
+                // These need to be selectable
                 int line1 = 0;
                 int line2 = 2;
 
@@ -89,7 +91,13 @@ public class MainActivity extends AppCompatActivity {
                 double[] keyVal2 = getNearKeyValue(xKey, line2, d2);
 
                 // Find ratio of line2 over line1
-                double ratio = getRatio(keyVal2[1], keyVal1[1]);
+                double ratio;
+                if (keyVal1[1] != 0) {
+                    ratio = getRatio(keyVal2[1], keyVal1[1]);
+                }
+                else {
+                    ratio = 0.0;
+                }
                 if (Double.isNaN(ratio)) {
                     ratio = 0.0;
                 }
