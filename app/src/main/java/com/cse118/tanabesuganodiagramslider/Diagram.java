@@ -31,7 +31,7 @@ public class Diagram {
     public class treeClass {
         private TreeMap<Double, Double> lineMap = new TreeMap<>();
 
-        public TreeMap<Double, Double> gettreeMap() {
+        public TreeMap<Double, Double> getTreeMap() {
             return lineMap;
         }
 
@@ -50,7 +50,7 @@ public class Diagram {
             return allVals;
         }
 
-        public void putValsInHash(double x, double y) {
+        public void putValsInTree(double x, double y) {
             lineMap.put(x, y);
         }
     }
@@ -78,7 +78,7 @@ public class Diagram {
                 tokens = line.split(",");
 
                 for (int i = 0; i < tokens.length - 1; i++) {
-                    treeMapArray[i].putValsInHash(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[i + 1]));
+                    treeMapArray[i].putValsInTree(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[i + 1]));
                 }
             }
 
@@ -93,7 +93,6 @@ public class Diagram {
 
             for (int j = 0; j < dataPoints.length; j++) {
                 dataPoints[j] = new DataPoint(points[j][0], points[j][1]);
-                System.out.println("points[" + j + "][] = " + points[j][0] + ", " + points[j][1]);
             }
             lineGraphSeries[i] = new LineGraphSeries<>(dataPoints);
         }
