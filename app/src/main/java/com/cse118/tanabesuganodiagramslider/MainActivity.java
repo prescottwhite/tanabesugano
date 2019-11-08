@@ -88,21 +88,22 @@ public class MainActivity extends AppCompatActivity {
 
                 // Find ratio of line2 over line1
                 double ratio;
-                if (keyVal1[1] != 0) {
-                    ratio = getRatio(keyVal2[1], keyVal1[1]);
+                ratio = getRatio(keyVal2[1], keyVal1[1]);
+                if (keyVal1[1] == 0) {
+                    mRatioEditText.setText("--.--");
+                }
+                else if (Double.isNaN(ratio)){
+                    mRatioEditText.setText("--.--");
                 }
                 else {
-                    ratio = 0.0;
-                }
-                if (Double.isNaN(ratio)) {
-                    ratio = 0.0;
+                    mRatioEditText.setText(Double.toString(ratio));
                 }
 
                 mSeek_series = new LineGraphSeries<>(new DataPoint[]{
                         new DataPoint(keyVal2[0], 0),
                         new DataPoint(keyVal2[0], keyVal2[1])
                 });
-                mRatioEditText.setText(Double.toString(ratio));
+
                 mGraph.addSeries(mSeek_series);
             }
 
