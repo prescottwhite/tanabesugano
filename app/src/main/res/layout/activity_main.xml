@@ -32,8 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:indeterminate="false"
-        android:max="40"
-        android:progress="25"
+        android:max="400"
+        android:progress="150"
         android:progressTint="#00FFFFFF" />
 
     <ScrollView

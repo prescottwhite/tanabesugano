@@ -21,7 +21,6 @@ public class Diagram {
     private int mLength;
     private int[] mLineColors;
 
-
     String[] firstLineCSV; // Remove this?
     private String[] mLineNames;
     private treeClass[] treeMapArray;
@@ -118,5 +117,9 @@ public class Diagram {
 
     public int getLength(){
         return mLength;
+    }
+
+    public treeClass[] getTreeMap() {
+        return treeMapArray;
     }
 }

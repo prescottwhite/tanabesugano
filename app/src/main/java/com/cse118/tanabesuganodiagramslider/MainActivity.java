@@ -18,6 +18,10 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.Map;
+
+import static java.lang.Double.NaN;
+
 public class MainActivity extends AppCompatActivity {
 
     Spinner mDiagramDropdown;
@@ -63,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Creating graph
         mGraph = (GraphView) findViewById(R.id.graph);
-        Diagram d2 = new Diagram(mGraph, "d2", this);
+        final Diagram d2 = new Diagram(mGraph, "d2", this);
 
         setUpRadioButtons(d2);
-        
+
         mRatioEditText = findViewById(R.id.editRatio);
 
         mSeekBar = findViewById(R.id.seek_x);
@@ -74,11 +78,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mGraph.removeSeries(mSeek_series);
-                mSeek_series = new LineGraphSeries<>(new DataPoint[] {
-                        new DataPoint(progress, 0),
-                        new DataPoint(progress, 75)
+                int line1 = 0;
+                int line2 = 2;
+
+                // Divide progress by 10 and cast to double
+                double xKey = convertX(progress);
+
+                // Find closest key, value pair for a given key and line
+                double[] keyVal1 = getNearKeyValue(xKey, line1, d2);
+                double[] keyVal2 = getNearKeyValue(xKey, line2, d2);
+
+                // Find ratio of line2 over line1
+                double ratio = getRatio(keyVal2[1], keyVal1[1]);
+                if (Double.isNaN(ratio)) {
+                    ratio = 0.0;
+                }
+
+                mSeek_series = new LineGraphSeries<>(new DataPoint[]{
+                        new DataPoint(keyVal2[0], 0),
+                        new DataPoint(keyVal2[0], keyVal2[1])
                 });
-                mRatioEditText.setText(Integer.toString(progress));
+                mRatioEditText.setText(Double.toString(ratio));
                 mGraph.addSeries(mSeek_series);
             }
 
@@ -105,11 +125,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setUpRadioButtons(Diagram diagram) {
-        for(int i = 0; i < diagram.getLength(); i++) {
+        for (int i = 0; i < diagram.getLength(); i++) {
             RadioButton newButton = new RadioButton(this);
             newButton.setText(diagram.getLineName(i));
             newButton.setTextColor(mLineColors[i]);
             mRgLineChoice.addView(newButton);
         }
+    }
+
+    double getRatio(double y2, double y1) {
+        double ratio = y2 / y1;
+
+        return Math.floor(ratio * 100) / 100;
+    }
+
+    double[] getNearKeyValue(double key, int line, Diagram diagram) {
+        double[] pair = new double[2];
+        Diagram.treeClass[] treeMap = diagram.getTreeMap();
+        Map.Entry<Double, Double> entry;
+
+        try {
+            entry = treeMap[line].getTreeMap().ceilingEntry(key);
+        }
+        catch (NullPointerException e) {
+            entry = treeMap[line].getTreeMap().floorEntry(key);
+        }
+
+        pair[0] = entry.getKey();
+        pair[1] = entry.getValue();
+
+        return pair;
+    }
+
+    double convertX(int raw) {
+        return (double) raw / 10;
     }
 }
