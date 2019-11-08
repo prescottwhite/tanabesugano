@@ -23,11 +23,10 @@
         android:hint="@string/ratio_hint"
         android:inputType="numberDecimal" />
 
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/graph"
+    <FrameLayout
+        android:id="@+id/fragmentcontainer_main_graph"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_marginRight="10dp" />
+        android:layout_height="450dp" />
 
     <SeekBar
         android:id="@+id/seek_x"

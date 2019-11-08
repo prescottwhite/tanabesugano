@@ -14,12 +14,12 @@ import java.util.Arrays;
 import java.util.TreeMap;
 
 public class Diagram {
-    private GraphView mGraph;
+    public GraphView mGraph;
     private String mDiagramName;
     private Context mContext;
 
     private int mLength;
-    private int[] mLineColors;
+
 
     private String[] mLineNames;
     private treeClass[] treeMapArray;
@@ -28,7 +28,6 @@ public class Diagram {
         mGraph = graph;
         mDiagramName = diagramName;
         mContext = context;
-        mLineColors = mContext.getResources().getIntArray(R.array.lineColors);
         createGraph();
     }
 
@@ -68,10 +67,12 @@ public class Diagram {
             String line = "";
 
             // Get first line of csv and store in firstLineCSV
+            // Parse into mLineNames
             line = buffer.readLine();
             String[] tokens = line.split(",");
             mLineNames = Arrays.copyOfRange(tokens, 1, tokens.length);
             mLength = mLineNames.length;
+
 
             // Create a new treeMap array based on how many 'y' values are found on each line of csv
             treeMapArray = new treeClass[tokens.length - 1];
@@ -91,22 +92,22 @@ public class Diagram {
 
         }
 
-        LineGraphSeries<DataPoint>[] lineGraphSeries = new LineGraphSeries[treeMapArray.length];
-        for (int i = 0; i < treeMapArray.length; i++) {
-            DataPoint[] dataPoints = new DataPoint[treeMapArray[0].getSize()];
-            double[][] points = treeMapArray[i].getAllKeyVals();
-
-            for (int j = 0; j < dataPoints.length; j++) {
-                dataPoints[j] = new DataPoint(points[j][0], points[j][1]);
-            }
-            lineGraphSeries[i] = new LineGraphSeries<>(dataPoints);
-        }
-
-        for (int i = 0; i < lineGraphSeries.length; i++) {
-            mGraph.addSeries(lineGraphSeries[i]);
-            int colorIndex = i % mLineColors.length;
-            lineGraphSeries[i].setColor(mLineColors[colorIndex]);
-        }
+//        LineGraphSeries<DataPoint>[] lineGraphSeries = new LineGraphSeries[treeMapArray.length];
+//        for (int i = 0; i < treeMapArray.length; i++) {
+//            DataPoint[] dataPoints = new DataPoint[treeMapArray[0].getSize()];
+//            double[][] points = treeMapArray[i].getAllKeyVals();
+//
+//            for (int j = 0; j < dataPoints.length; j++) {
+//                dataPoints[j] = new DataPoint(points[j][0], points[j][1]);
+//            }
+//            lineGraphSeries[i] = new LineGraphSeries<>(dataPoints);
+//        }
+//
+//        for (int i = 0; i < lineGraphSeries.length; i++) {
+//            mGraph.addSeries(lineGraphSeries[i]);
+//            int colorIndex = i % mLineColors.length;
+//            lineGraphSeries[i].setColor(mLineColors[colorIndex]);
+//        }
     }
 
     public String getLineName(int i) {
@@ -120,4 +121,8 @@ public class Diagram {
     public treeClass[] getTreeMap() {
         return treeMapArray;
     }
+
+    public treeClass getPoints(int i){ return treeMapArray[i];}
+
+
 }

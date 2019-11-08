@@ -1,6 +1,8 @@
 package com.cse118.tanabesuganodiagramslider;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.view.View;
@@ -62,6 +64,16 @@ public class MainActivity extends AppCompatActivity {
         mToggleButton = findViewById(R.id.toggleButton);
 
         // Creating graph
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment =fragmentManager.findFragmentById(R.id.fragmentcontainer_main_graph);
+        if (fragment == null) {
+            fragment = new DiagramFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.fragmentcontainer_main_graph, fragment)
+                    .commit();
+        }
+
+
         mGraph = (GraphView) findViewById(R.id.graph);
         final Diagram d2 = new Diagram(mGraph, "d2", this);
 

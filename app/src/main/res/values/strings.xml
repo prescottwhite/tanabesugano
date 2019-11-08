@@ -18,6 +18,9 @@
 
     <string name="switch_1">Switch #1</string>
     <string name="switch_2">Switch #2</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--mock stuff above-->
 
 </resources>
