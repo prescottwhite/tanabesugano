@@ -21,7 +21,6 @@ public class Diagram {
     private int mLength;
     private int[] mLineColors;
 
-    String[] firstLineCSV; // Remove this?
     private String[] mLineNames;
     private treeClass[] treeMapArray;
 
@@ -71,7 +70,6 @@ public class Diagram {
             // Get first line of csv and store in firstLineCSV
             line = buffer.readLine();
             String[] tokens = line.split(",");
-            firstLineCSV = tokens;
             mLineNames = Arrays.copyOfRange(tokens, 1, tokens.length);
             mLength = mLineNames.length;
 

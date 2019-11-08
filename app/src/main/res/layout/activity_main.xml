@@ -26,13 +26,14 @@
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="match_parent"
-        android:layout_height="450dp" />
+        android:layout_height="450dp"
+        android:layout_marginRight="10dp" />
 
     <SeekBar
         android:id="@+id/seek_x"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="15dp"
         android:indeterminate="false"
         android:max="400"
         android:progress="150"
