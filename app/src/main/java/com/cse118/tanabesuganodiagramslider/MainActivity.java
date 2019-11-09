@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -24,21 +25,9 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    Spinner mDiagramDropdown;
+    private Spinner mDiagramDropdown;
 
-    GraphView mGraph;
-    LineGraphSeries<DataPoint> mSeek_series;
 
-    private int[] mLineColors;
-
-    LinearLayout mHidden;
-    SeekBar mSeekBar;
-    EditText mRatioEditText;
-    RadioGroup mRgLineChoice;
-
-    Switch mSwitch1;
-    Switch mSwitch2;
-    ToggleButton mToggleButton;
 
 
     @Override
@@ -46,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Line Color List
-        mLineColors = this.getResources().getIntArray(R.array.lineColors);
 
         // Dropdown menu
         mDiagramDropdown = findViewById(R.id.select_diagram);
@@ -56,14 +43,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDiagramDropdown.setAdapter(adapter);
 
-        mHidden = findViewById(R.id.ll_main_hidden);
-        mRgLineChoice = findViewById(R.id.rg_main_choices);
 
-        mSwitch1 = findViewById(R.id.switch1);
-        mSwitch2 = findViewById(R.id.switch2);
-        mToggleButton = findViewById(R.id.toggleButton);
-
-        // Creating graph
+        // Creating Diagram Graph Fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment =fragmentManager.findFragmentById(R.id.fragmentcontainer_main_graph);
         if (fragment == null) {
@@ -73,108 +54,14 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
-
-        mGraph = (GraphView) findViewById(R.id.graph);
-        final Diagram d2 = new Diagram(mGraph, "d2", this);
-
-        setUpRadioButtons(d2);
-
-        mRatioEditText = findViewById(R.id.editRatio);
-
-        mSeekBar = findViewById(R.id.seek_x);
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mGraph.removeSeries(mSeek_series);
-
-                // These need to be selectable
-                int line1 = 0;
-                int line2 = 2;
-
-                // Divide progress by 10 and cast to double
-                double xKey = convertX(progress);
-
-                // Find closest key, value pair for a given key and line
-                double[] keyVal1 = getNearKeyValue(xKey, line1, d2);
-                double[] keyVal2 = getNearKeyValue(xKey, line2, d2);
-
-                // Find ratio of line2 over line1
-                double ratio;
-                ratio = getRatio(keyVal2[1], keyVal1[1]);
-                if (keyVal1[1] == 0) {
-                    mRatioEditText.setText("--.--");
-                }
-                else if (Double.isNaN(ratio)){
-                    mRatioEditText.setText("--.--");
-                }
-                else {
-                    mRatioEditText.setText(Double.toString(ratio));
-                }
-
-                mSeek_series = new LineGraphSeries<>(new DataPoint[]{
-                        new DataPoint(keyVal2[0], 0),
-                        new DataPoint(keyVal2[0], keyVal2[1])
-                });
-
-                mGraph.addSeries(mSeek_series);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                hideViews();
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                showViews();
-            }
-        });
-
     }
 
-    void hideViews() {
-        mHidden.setVisibility(View.INVISIBLE);
-    }
 
-    void showViews() {
-        mHidden.setVisibility(View.VISIBLE);
 
-    }
 
-    void setUpRadioButtons(Diagram diagram) {
-        for (int i = 0; i < diagram.getLength(); i++) {
-            RadioButton newButton = new RadioButton(this);
-            newButton.setText(diagram.getLineName(i));
-            newButton.setTextColor(mLineColors[i]);
-            mRgLineChoice.addView(newButton);
-        }
-    }
 
-    double getRatio(double y2, double y1) {
-        double ratio = y2 / y1;
 
-        return Math.floor(ratio * 100) / 100;
-    }
 
-    double[] getNearKeyValue(double key, int line, Diagram diagram) {
-        double[] pair = new double[2];
-        Diagram.treeClass[] treeMap = diagram.getTreeMap();
-        Map.Entry<Double, Double> entry;
 
-        try {
-            entry = treeMap[line].getTreeMap().ceilingEntry(key);
-        }
-        catch (NullPointerException e) {
-            entry = treeMap[line].getTreeMap().floorEntry(key);
-        }
 
-        pair[0] = entry.getKey();
-        pair[1] = entry.getValue();
-
-        return pair;
-    }
-
-    double convertX(int raw) {
-        return (double) raw / 10;
-    }
 }

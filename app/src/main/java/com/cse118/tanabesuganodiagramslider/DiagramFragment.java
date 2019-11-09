@@ -9,20 +9,38 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 
 public class DiagramFragment extends Fragment {
 
+    private Context mContext;
     private Diagram mDiagram;
-    private GraphView mGraph;
-
     private int[] mLineColors;
+
+    private EditText mEditRatio;
+    private GraphView mGraph;
+    private SeekBar mSeekBar;
+    private LinearLayout mHidden;
+    private RadioGroup mChoices;
+
+
+    private LineGraphSeries<DataPoint> mSeek_series;
+
+
+
+
 
 
     @Override
@@ -30,25 +48,84 @@ public class DiagramFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_diagram, container, false);
+        mContext = view.getContext();
 
 
-        mGraph = (GraphView) view.findViewById(R.id.graph);
-        mDiagram = new Diagram(mGraph, "d2", view.getContext());
+
+        mDiagram = new Diagram("d2", mContext);
         mLineColors = view.getResources().getIntArray(R.array.lineColors);
 
-        generateGraph();
-        mDiagram.mGraph = mGraph;
+        mEditRatio = view.findViewById(R.id.editRatio);
+        mGraph = (GraphView) view.findViewById(R.id.graph);
+        mSeekBar = view.findViewById(R.id.seek_x);
+        mHidden = view.findViewById(R.id.ll_main_hidden);
+        mChoices = view.findViewById(R.id.rg_main_choices);
 
+
+        generateGraph(mDiagram);
+        setUpRadioButtons(mDiagram);
+
+        mSeekBar = view.findViewById(R.id.seek_x);
+        mSeekBar.setOnSeekBarChangeListener(mSeekBarListener);
 
         return view;
     }
 
-    private void generateGraph(){
+    private final SeekBar.OnSeekBarChangeListener mSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
 
-        LineGraphSeries<DataPoint>[] lineGraphSeries = new LineGraphSeries[mDiagram.getLength()];
-        for (int i = 0; i < mDiagram.getLength(); i++) {
-            DataPoint[] dataPoints = new DataPoint[mDiagram.getPoints(0).getSize()];
-            double[][] points = mDiagram.getPoints(i).getAllKeyVals();
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mGraph.removeSeries(mSeek_series);
+
+                // These need to be selectable
+                int line1 = 0;
+                int line2 = 2;
+
+                // Divide progress by 10 and cast to double
+                double xKey = convertX(progress);
+
+                // Find closest key, value pair for a given key and line
+                double[] keyVal1 = getNearKeyValue(xKey, line1, mDiagram);
+                double[] keyVal2 = getNearKeyValue(xKey, line2, mDiagram);
+
+                // Find ratio of line2 over line1
+                double ratio;
+                ratio = getRatio(keyVal2[1], keyVal1[1]);
+                if (keyVal1[1] == 0) {
+                    mEditRatio.setText("--.--");
+                }
+                else if (Double.isNaN(ratio)){
+                    mEditRatio.setText("--.--");
+                }
+                else {
+                    mEditRatio.setText(Double.toString(ratio));
+                }
+
+                mSeek_series = new LineGraphSeries<>(new DataPoint[]{
+                        new DataPoint(keyVal2[0], 0),
+                        new DataPoint(keyVal2[0], keyVal2[1])
+                });
+
+                mGraph.addSeries(mSeek_series);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                hideDetails();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                showDetails();
+            }
+        };
+
+    private void generateGraph(Diagram diagram){
+
+        LineGraphSeries<DataPoint>[] lineGraphSeries = new LineGraphSeries[diagram.getLength()];
+        for (int i = 0; i < diagram.getLength(); i++) {
+            DataPoint[] dataPoints = new DataPoint[diagram.getPoints(0).getSize()];
+            double[][] points = diagram.getPoints(i).getAllKeyVals();
 
             for (int j = 0; j < dataPoints.length; j++) {
                 dataPoints[j] = new DataPoint(points[j][0], points[j][1]);
@@ -63,5 +140,48 @@ public class DiagramFragment extends Fragment {
         }
     }
 
+    private void setUpRadioButtons(Diagram diagram) {
+        for (int i = 0; i < diagram.getLength(); i++) {
+            RadioButton newButton = new RadioButton(mContext);
+            newButton.setText(diagram.getLineName(i));
+            newButton.setTextColor(mLineColors[i]);
+            mChoices.addView(newButton);
+        }
+    }
 
+    private void hideDetails() {
+        mHidden.setVisibility(View.INVISIBLE);
+    }
+
+    private void showDetails() {
+        mHidden.setVisibility(View.VISIBLE);
+    }
+
+    private double getRatio(double y2, double y1) {
+        double ratio = y2 / y1;
+
+        return Math.floor(ratio * 100) / 100;
+    }
+
+    private double[] getNearKeyValue(double key, int line, Diagram diagram) {
+        double[] pair = new double[2];
+        Diagram.treeClass[] treeMap = diagram.getTreeMap();
+        Map.Entry<Double, Double> entry;
+
+        try {
+            entry = treeMap[line].getTreeMap().ceilingEntry(key);
+        }
+        catch (NullPointerException e) {
+            entry = treeMap[line].getTreeMap().floorEntry(key);
+        }
+
+        pair[0] = entry.getKey();
+        pair[1] = entry.getValue();
+
+        return pair;
+    }
+
+    private double convertX(int raw) {
+        return (double) raw / 10;
+    }
 }

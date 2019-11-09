@@ -14,9 +14,10 @@ import java.util.Arrays;
 import java.util.TreeMap;
 
 public class Diagram {
-    public GraphView mGraph;
+
     private String mDiagramName;
     private Context mContext;
+    private static Diagram mDiagram;
 
     private int mLength;
 
@@ -24,8 +25,9 @@ public class Diagram {
     private String[] mLineNames;
     private treeClass[] treeMapArray;
 
-    public Diagram(GraphView graph, String diagramName, Context context) {
-        mGraph = graph;
+
+    public Diagram(String diagramName, Context context) {
+        mDiagram = this;
         mDiagramName = diagramName;
         mContext = context;
         createGraph();

@@ -13,69 +13,14 @@
         android:layout_height="40dp"
         android:spinnerMode="dropdown" />
 
-    <EditText
-        android:id="@+id/editRatio"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:ems="10"
-        android:gravity="left"
-        android:hint="@string/ratio_hint"
-        android:inputType="numberDecimal" />
 
-    <FrameLayout
+
+    <LinearLayout
         android:id="@+id/fragmentcontainer_main_graph"
         android:layout_width="match_parent"
-        android:layout_height="450dp" />
-
-    <SeekBar
-        android:id="@+id/seek_x"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:indeterminate="false"
-        android:max="400"
-        android:progress="150"
-        android:progressTint="#00FFFFFF" />
-
-    <ScrollView
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollIndicators="none"
-        android:scrollbarStyle="outsideOverlay">
-
-        <LinearLayout
-            android:id="@+id/ll_main_hidden"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RadioGroup
-                android:id="@+id/rg_main_choices"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+        android:orientation="vertical"/>
 
 
-            <Switch
-                android:id="@+id/switch1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/switch_1" />
-
-            <Switch
-                android:id="@+id/switch2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/switch_2" />
-
-            <ToggleButton
-                android:id="@+id/toggleButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-    </ScrollView>
 
 </LinearLayout>
