@@ -91,25 +91,8 @@ public class Diagram {
             }
 
         } catch (IOException e) {
-
+            // TODO: Something at least
         }
-
-//        LineGraphSeries<DataPoint>[] lineGraphSeries = new LineGraphSeries[treeMapArray.length];
-//        for (int i = 0; i < treeMapArray.length; i++) {
-//            DataPoint[] dataPoints = new DataPoint[treeMapArray[0].getSize()];
-//            double[][] points = treeMapArray[i].getAllKeyVals();
-//
-//            for (int j = 0; j < dataPoints.length; j++) {
-//                dataPoints[j] = new DataPoint(points[j][0], points[j][1]);
-//            }
-//            lineGraphSeries[i] = new LineGraphSeries<>(dataPoints);
-//        }
-//
-//        for (int i = 0; i < lineGraphSeries.length; i++) {
-//            mGraph.addSeries(lineGraphSeries[i]);
-//            int colorIndex = i % mLineColors.length;
-//            lineGraphSeries[i].setColor(mLineColors[colorIndex]);
-//        }
     }
 
     public String getLineName(int i) {
@@ -125,6 +108,5 @@ public class Diagram {
     }
 
     public treeClass getPoints(int i){ return treeMapArray[i];}
-
 
 }

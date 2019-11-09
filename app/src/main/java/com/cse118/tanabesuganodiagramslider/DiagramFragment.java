@@ -38,11 +38,6 @@ public class DiagramFragment extends Fragment {
 
     private LineGraphSeries<DataPoint> mSeek_series;
 
-
-
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,13 +45,11 @@ public class DiagramFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_diagram, container, false);
         mContext = view.getContext();
 
-
-
         mDiagram = new Diagram("d2", mContext);
         mLineColors = view.getResources().getIntArray(R.array.lineColors);
 
         mEditRatio = view.findViewById(R.id.editRatio);
-        mGraph = (GraphView) view.findViewById(R.id.graph);
+        mGraph = view.findViewById(R.id.graph);
         mSeekBar = view.findViewById(R.id.seek_x);
         mHidden = view.findViewById(R.id.ll_main_hidden);
         mChoices = view.findViewById(R.id.rg_main_choices);
