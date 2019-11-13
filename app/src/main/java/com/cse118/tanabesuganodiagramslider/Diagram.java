@@ -1,6 +1,7 @@
 package com.cse118.tanabesuganodiagramslider;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
@@ -25,7 +26,7 @@ public class Diagram {
     private String[] mDiagramPaths;
 
     private String[] mLineNames;
-    private treeClass[] treeMapArray;
+    private LineMap[] treeMapArray;
 
 
     public Diagram(int diagramIndex, Context context) {
@@ -45,34 +46,23 @@ public class Diagram {
         mDiagram = this;
     }
 
-    public class treeClass {
-        private TreeMap<Double, Double> lineMap = new TreeMap<>();
-
-        public TreeMap<Double, Double> getTreeMap() {
-            return lineMap;
+    public class LineMap extends TreeMap<Double,Double>{
+        public LineMap() {
+            super();
         }
 
-        public int getSize() {
-            return lineMap.size();
-        }
-
-        public double[][] getAllKeyVals() {
-            double[][] allVals = new double[lineMap.size()][2];
+        public DataPoint[] getDataPoints() {
+            DataPoint[] dataPoints = new DataPoint[this.size()];
             int i = 0;
-            for (Double j : lineMap.keySet()) {
-                allVals[i][0] = j;
-                allVals[i][1] = lineMap.get(j);
+            for(Double j : this.keySet()) {
+                dataPoints[i] = new DataPoint(j, this.get(j));
                 i++;
             }
-            return allVals;
-        }
-
-        public void putValsInTree(double x, double y) {
-            lineMap.put(x, y);
+            return dataPoints;
         }
     }
 
-    public void createGraph() {
+    private void createGraph() {
         String diagramFilename = mContext.getResources().getStringArray(R.array.diagrams_filenames)[mDiagramIndex];
 
         try (
@@ -90,17 +80,28 @@ public class Diagram {
             mLength = mLineNames.length;
 
 
-            // Create a new treeMap array based on how many 'y' values are found on each line of csv
-            treeMapArray = new treeClass[tokens.length - 1];
-            for (int i = 0; i < treeMapArray.length; i++) {
-                treeMapArray[i] = new treeClass();
+            // Create a new treeMap array based on the number of electron states (lines to be drawn)
+            treeMapArray = new LineMap[mLength];
+            for (int i = 0; i < mLength; i++) {
+                treeMapArray[i] = new LineMap();
             }
 
             while ((line = buffer.readLine()) != null) {
                 tokens = line.split(",");
 
-                for (int i = 0; i < tokens.length - 1; i++) {
-                    treeMapArray[i].putValsInTree(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[i + 1]));
+                try {
+                    Double xValue = Double.parseDouble(tokens[0]);
+                    for (int i = 0; i < mLength; i++) {
+
+                        try {
+                            Double yValue = Double.parseDouble(tokens[i + 1]);
+                            treeMapArray[i].put(xValue, yValue);
+                        } catch (NumberFormatException e) {
+                            Log.w("Diagram", "CSV is missing an y value", e);
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e("Diagram", "CSV is missing an x value", e);
                 }
             }
 
@@ -117,10 +118,10 @@ public class Diagram {
         return mLength;
     }
 
-    public treeClass[] getTreeMap() {
+    public LineMap[] getTreeMap() {
         return treeMapArray;
     }
 
-    public treeClass getPoints(int i){ return treeMapArray[i];}
+    public LineMap getLineMap(int i){ return treeMapArray[i];}
 
 }

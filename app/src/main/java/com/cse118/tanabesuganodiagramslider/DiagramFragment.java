@@ -124,31 +124,22 @@ public class DiagramFragment extends Fragment {
         };
 
     private void generateGraph(Diagram diagram){
-
-        LineGraphSeries<DataPoint>[] lineGraphSeries = new LineGraphSeries[diagram.getLength()];
         for (int i = 0; i < diagram.getLength(); i++) {
-            DataPoint[] dataPoints = new DataPoint[diagram.getPoints(0).getSize()];
-            double[][] points = diagram.getPoints(i).getAllKeyVals();
+            DataPoint[] dataPoints = diagram.getLineMap(i).getDataPoints();
+            LineGraphSeries<DataPoint> lineGraphSeries = new LineGraphSeries<>(dataPoints);
 
-            for (int j = 0; j < dataPoints.length; j++) {
-                dataPoints[j] = new DataPoint(points[j][0], points[j][1]);
-            }
-            lineGraphSeries[i] = new LineGraphSeries<>(dataPoints);
-        }
-
-        for (int i = 0; i < lineGraphSeries.length; i++) {
-            mGraph.addSeries(lineGraphSeries[i]);
+            mGraph.addSeries(lineGraphSeries);
             int colorIndex = i % mLineColors.length;
-            lineGraphSeries[i].setColor(mLineColors[colorIndex]);
+            lineGraphSeries.setColor(mLineColors[colorIndex]);
         }
     }
 
     private void setUpRadioButtons(Diagram diagram) {
-
         for (int i = 0; i < diagram.getLength(); i++) {
             RadioButton newButton = new RadioButton(mContext);
             newButton.setText(diagram.getLineName(i));
-            newButton.setTextColor(mLineColors[i%mLineColors.length]);
+            int colorIndex = i % mLineColors.length;
+            newButton.setTextColor(mLineColors[colorIndex]);
             mChoices.addView(newButton);
         }
     }
@@ -167,16 +158,17 @@ public class DiagramFragment extends Fragment {
         return Math.floor(ratio * 100) / 100;
     }
 
+    // TODO: Clean up this function
     private double[] getNearKeyValue(double key, int line, Diagram diagram) {
         double[] pair = new double[2];
-        Diagram.treeClass[] treeMap = diagram.getTreeMap();
+        Diagram.LineMap[] treeMap = diagram.getTreeMap();
         Map.Entry<Double, Double> entry;
 
         try {
-            entry = treeMap[line].getTreeMap().ceilingEntry(key);
+            entry = treeMap[line].ceilingEntry(key);
         }
         catch (NullPointerException e) {
-            entry = treeMap[line].getTreeMap().floorEntry(key);
+            entry = treeMap[line].floorEntry(key);
         }
 
         pair[0] = entry.getKey();
