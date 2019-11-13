@@ -20,6 +20,7 @@
         <item>databases/d8.csv</item>
     </string-array>
 
+    <string name="button_main_go">Go</string>
     <!--mock stuff below-->
     <string name="ratio_hint">Enter Ratio</string>
 
