@@ -16,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -25,6 +26,9 @@ import java.util.TreeMap;
 
 public class DiagramFragment extends Fragment {
     public final static String DIAGRAM_INDEX = "diagram_index";
+
+    private final static int DIAGRAM_MAX_X = 40;
+    private final static int DIAGRAM_MAX_Y = 80;
 
 
     private Context mContext;
@@ -124,6 +128,7 @@ public class DiagramFragment extends Fragment {
         };
 
     private void generateGraph(Diagram diagram){
+        // Draw Lines
         for (int i = 0; i < diagram.getLength(); i++) {
             DataPoint[] dataPoints = diagram.getLineMap(i).getDataPoints();
             LineGraphSeries<DataPoint> lineGraphSeries = new LineGraphSeries<>(dataPoints);
@@ -132,6 +137,17 @@ public class DiagramFragment extends Fragment {
             int colorIndex = i % mLineColors.length;
             lineGraphSeries.setColor(mLineColors[colorIndex]);
         }
+
+        // Set Viewport
+        Viewport viewport = mGraph.getViewport();
+        viewport.setXAxisBoundsManual(true);
+        viewport.setMinX(0);
+        viewport.setMaxX(DIAGRAM_MAX_X);
+
+        viewport.setYAxisBoundsManual(true);
+        viewport.setMinY(0);
+        viewport.setMaxY(DIAGRAM_MAX_Y);
+
     }
 
     private void setUpRadioButtons(Diagram diagram) {
