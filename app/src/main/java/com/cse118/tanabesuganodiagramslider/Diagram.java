@@ -19,18 +19,21 @@ public class Diagram {
     private Context mContext;
     private static Diagram mDiagram;
 
+    private int mDiagramIndex;
     private int mLength;
-
+    private String[] mDiagramPaths;
 
     private String[] mLineNames;
     private treeClass[] treeMapArray;
 
 
-    public Diagram(String diagramName, Context context) {
-        mDiagram = this;
-        mDiagramName = diagramName;
+    public Diagram(int diagramIndex, Context context) {
+        mDiagramIndex = diagramIndex;
+
         mContext = context;
         createGraph();
+
+        mDiagram = this;
     }
 
     public class treeClass {
@@ -61,10 +64,13 @@ public class Diagram {
     }
 
     public void createGraph() {
+        int diagramIndex = 0;
+        String diagramFilename = mContext.getResources().getStringArray(R.array.diagrams_filenames)[diagramIndex];
+
         try (
                 BufferedReader buffer = new BufferedReader(
-                        new InputStreamReader(mContext.getAssets().open(
-                                "databases/" + mDiagramName + ".csv")))
+                    new InputStreamReader(mContext.getAssets().open(
+                            diagramFilename)))
         ) {
             String line = "";
 

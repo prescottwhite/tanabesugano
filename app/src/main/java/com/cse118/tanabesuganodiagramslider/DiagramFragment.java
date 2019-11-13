@@ -45,7 +45,7 @@ public class DiagramFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_diagram, container, false);
         mContext = view.getContext();
 
-        mDiagram = new Diagram("d2", mContext);
+        mDiagram = new Diagram(0, mContext);
         mLineColors = view.getResources().getIntArray(R.array.lineColors);
 
         mEditRatio = view.findViewById(R.id.editRatio);
@@ -53,7 +53,6 @@ public class DiagramFragment extends Fragment {
         mSeekBar = view.findViewById(R.id.seek_x);
         mHidden = view.findViewById(R.id.ll_main_hidden);
         mChoices = view.findViewById(R.id.rg_main_choices);
-
 
         generateGraph(mDiagram);
         setUpRadioButtons(mDiagram);

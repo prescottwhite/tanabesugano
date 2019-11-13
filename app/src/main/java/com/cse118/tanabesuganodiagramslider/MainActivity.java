@@ -24,7 +24,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static String DIAGRAM_INDEX = "diagram_index";
     private Spinner mDiagramDropdown;
 
     @Override
@@ -32,13 +32,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         // Dropdown menu
         mDiagramDropdown = findViewById(R.id.select_diagram);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.diagrams_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDiagramDropdown.setAdapter(adapter);
+
+        int diagram_index = mDiagramDropdown.getSelectedItemPosition();
+
+        // Build Arguments for DiagramFragment
+        Bundle args = new Bundle();
+        args.putInt(DIAGRAM_INDEX, diagram_index);
 
 
         // Creating Diagram Graph Fragment
@@ -50,7 +55,5 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.fragmentcontainer_main_graph, fragment)
                     .commit();
         }
-
     }
-
 }
