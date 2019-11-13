@@ -1,6 +1,7 @@
 package com.cse118.tanabesuganodiagramslider;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -33,6 +34,14 @@ public class Diagram {
         mContext = context;
         createGraph();
 
+        Toast.makeText(context, Integer.toString(diagramIndex) , Toast.LENGTH_LONG).show();
+
+
+        if(diagramIndex > 6) {
+            // TODO: Clean up this error
+            Toast.makeText(context, "Warning, Diagram index out of bounds", Toast.LENGTH_LONG);
+            mDiagramIndex = 0;
+        }
         mDiagram = this;
     }
 
@@ -64,8 +73,7 @@ public class Diagram {
     }
 
     public void createGraph() {
-        int diagramIndex = 0;
-        String diagramFilename = mContext.getResources().getStringArray(R.array.diagrams_filenames)[diagramIndex];
+        String diagramFilename = mContext.getResources().getStringArray(R.array.diagrams_filenames)[mDiagramIndex];
 
         try (
                 BufferedReader buffer = new BufferedReader(

@@ -24,6 +24,8 @@ import java.util.TreeMap;
 
 
 public class DiagramFragment extends Fragment {
+    public final static String DIAGRAM_INDEX = "diagram_index";
+
 
     private Context mContext;
     private Diagram mDiagram;
@@ -38,6 +40,14 @@ public class DiagramFragment extends Fragment {
 
     private LineGraphSeries<DataPoint> mSeek_series;
 
+    public static DiagramFragment newInstance(int diagramIndex) {
+        DiagramFragment fragment = new DiagramFragment();
+        Bundle args = new Bundle();
+        args.putInt(DIAGRAM_INDEX, diagramIndex);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,7 +55,9 @@ public class DiagramFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_diagram, container, false);
         mContext = view.getContext();
 
-        mDiagram = new Diagram(0, mContext);
+        int diagramIndex = getArguments().getInt(DIAGRAM_INDEX, 0);
+        mDiagram = new Diagram(diagramIndex, mContext);
+
         mLineColors = view.getResources().getIntArray(R.array.lineColors);
 
         mEditRatio = view.findViewById(R.id.editRatio);
@@ -53,11 +65,10 @@ public class DiagramFragment extends Fragment {
         mSeekBar = view.findViewById(R.id.seek_x);
         mHidden = view.findViewById(R.id.ll_main_hidden);
         mChoices = view.findViewById(R.id.rg_main_choices);
+        mSeekBar = view.findViewById(R.id.seek_x);
 
         generateGraph(mDiagram);
         setUpRadioButtons(mDiagram);
-
-        mSeekBar = view.findViewById(R.id.seek_x);
         mSeekBar.setOnSeekBarChangeListener(mSeekBarListener);
 
         return view;
@@ -133,10 +144,11 @@ public class DiagramFragment extends Fragment {
     }
 
     private void setUpRadioButtons(Diagram diagram) {
+
         for (int i = 0; i < diagram.getLength(); i++) {
             RadioButton newButton = new RadioButton(mContext);
             newButton.setText(diagram.getLineName(i));
-            newButton.setTextColor(mLineColors[i]);
+            newButton.setTextColor(mLineColors[i%mLineColors.length]);
             mChoices.addView(newButton);
         }
     }
