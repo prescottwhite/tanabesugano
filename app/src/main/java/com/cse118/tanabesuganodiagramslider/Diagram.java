@@ -16,7 +16,6 @@ public class Diagram {
     private static final int MAX_DIAGRAMS = 7;
 
     private final Context mContext;
-    private final int mDiagramIndex;
     private int mLength; // Dependent on the number of state titles in the first line of the CSV
 
     private String[] mLineNames;
@@ -24,22 +23,16 @@ public class Diagram {
 
 
     public Diagram(int diagramIndex, Context context) {
-        mDiagramIndex = diagramIndex;
-
         mContext = context;
+        readFile(diagramIndex);
+        Log.i(LOG_TAG, "Created new Diagram at index: " + diagramIndex);
+    }
 
-
+    private void readFile(int diagramIndex) {
         if (diagramIndex >= MAX_DIAGRAMS) {
             Log.e(LOG_TAG, "Diagram index out of bounds, the app is probably going to crash");
         }
-
-        Log.i(LOG_TAG, "Created new Diagram at index: " + diagramIndex);
-        readFile();
-
-    }
-
-    private void readFile() {
-        String diagramFilename = mContext.getResources().getStringArray(R.array.diagrams_filenames)[mDiagramIndex];
+        String diagramFilename = mContext.getResources().getStringArray(R.array.diagrams_filenames)[diagramIndex];
 
         try (
                 BufferedReader buffer = new BufferedReader(
@@ -79,6 +72,7 @@ public class Diagram {
             Log.e(LOG_TAG, diagramFilename + " failed to open", e);
         }
     }
+
 
     public String getLineName(int i) {
         return mLineNames[i];
