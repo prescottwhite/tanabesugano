@@ -21,6 +21,7 @@
     </string-array>
 
     <string name="button_main_go">Go</string>
+    <string name="invalid_calc">"--.--"</string>
     <!--mock stuff below-->
     <string name="ratio_hint">Enter Ratio</string>
 
