@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Dropdown menu
-        mDiagramDropdown = findViewById(R.id.select_diagram);
+        mDiagramDropdown = findViewById(R.id.main_spin_select_diagram);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.diagrams_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -43,11 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Creating Diagram Graph Fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment =fragmentManager.findFragmentById(R.id.fragmentcontainer_main_graph);
+        Fragment fragment =fragmentManager.findFragmentById(R.id.main_ll_fragmentcontainer_main_graph);
         if (fragment == null) {
             fragment = new DiagramFragment();
             fragmentManager.beginTransaction()
-                    .add(R.id.fragmentcontainer_main_graph, fragment)
+                    .add(R.id.main_ll_fragmentcontainer_main_graph, fragment)
                     .commit();
         }
 

@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <Spinner
-        android:id="@+id/select_diagram"
+        android:id="@+id/main_spin_select_diagram"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:spinnerMode="dropdown" />
@@ -16,7 +16,7 @@
 
 
     <LinearLayout
-        android:id="@+id/fragmentcontainer_main_graph"
+        android:id="@+id/main_ll_fragmentcontainer_main_graph"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"/>

@@ -5,13 +5,20 @@
     <color name="colorAccent">#D81B60</color>
 
     <array name="lineColors">
-        <item>#4e33d6</item>
-        <item>#ff1d15</item>
+
+
+
         <item>#3ec300</item>
-        <item>#a833d6</item>
-        <item>#33d6d6</item>
         <item>#33691E</item>
+
+        <item>#33d6d6</item>
+        <item>#4e33d6</item>
         <item>#4A148C</item>
+        <item>#a833d6</item>
+
+
+        <item>#ff1d15</item>
         <item>#B71C1C</item>
+
     </array>
 </resources>

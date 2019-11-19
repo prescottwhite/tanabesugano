@@ -7,30 +7,23 @@
     tools:context=".DiagramFragment">
 
     <EditText
-        android:id="@+id/editRatio"
+        android:id="@+id/fragment_diagram_et_editRatio"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:ems="10"
         android:gravity="left"
-        android:hint="@string/ratio_hint"
+        android:hint="@string/fragment_diagram_ratio_hint"
         android:inputType="numberDecimal" />
 
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/graph"
-        android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_marginRight="10dp" />
-
-    <SeekBar
-        android:id="@+id/seek_x"
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/fragment_diagram_et_enterX"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:indeterminate="false"
-        android:max="400"
-        android:progress="150"
-        android:progressTint="#00FFFFFF" />
+        android:layout_marginLeft="10dp"
+        android:ems="10"
+        android:hint="@string/fragment_diagram_xVal_hint"
+        android:inputType="numberDecimal" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -39,33 +32,49 @@
         android:scrollbarStyle="outsideOverlay">
 
         <LinearLayout
-            android:id="@+id/ll_main_hidden"
+            android:id="@+id/fragment_diagram_ll_main_hidden"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/fragment_diagram_gphvw_graph"
+                android:layout_width="match_parent"
+                android:layout_height="450dp"
+                android:layout_marginRight="10dp" />
+
+            <SeekBar
+                android:id="@+id/fragment_diagram_skbr_seek_x"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:indeterminate="false"
+                android:max="400"
+                android:progress="150"
+                android:progressTint="#00FFFFFF" />
+
             <RadioGroup
-                android:id="@+id/rg_main_choices"
+                android:id="@+id/fragment_diagram_rg_main_choices"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
 
             <Switch
-                android:id="@+id/switch1"
+                android:id="@+id/fragment_diagram_swt_switch1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="@string/switch_1" />
+                android:text="@string/fragment_diagram_switch_1" />
 
             <Switch
-                android:id="@+id/switch2"
+                android:id="@+id/fragment_diagram_swt_switch2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="@string/switch_2" />
+                android:text="@string/fragment_diagram_switch_2" />
 
             <ToggleButton
-                android:id="@+id/toggleButton"
+                android:id="@+id/fragment_diagram_togbtn_toggleButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
