@@ -1,112 +1,104 @@
 package com.cse118.tanabesuganodiagramslider;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import java.util.Arrays;
 import java.util.TreeMap;
 
 public class Diagram {
+    private static final String LOG_TAG = Diagram.class.getSimpleName();
+    private static final int MAX_DIAGRAMS = 7;
 
-    private String mDiagramName;
-    private Context mContext;
-    private static Diagram mDiagram;
-
-    private int mLength;
-
+    private final Context mContext;
+    private int mLength; // Dependent on the number of state titles in the first line of the CSV
 
     private String[] mLineNames;
-    private treeClass[] treeMapArray;
+    private LineMap[] mLineMaps;
 
 
-    public Diagram(String diagramName, Context context) {
-        mDiagram = this;
-        mDiagramName = diagramName;
+    public Diagram(int diagramIndex, Context context) {
         mContext = context;
-        createGraph();
+        readFile(diagramIndex);
+        Log.i(LOG_TAG, "Created new Diagram at index: " + diagramIndex);
     }
 
-    public class treeClass {
-        private TreeMap<Double, Double> lineMap = new TreeMap<>();
-
-        public TreeMap<Double, Double> getTreeMap() {
-            return lineMap;
+    private void readFile(int diagramIndex) {
+        if (diagramIndex >= MAX_DIAGRAMS) {
+            Log.e(LOG_TAG, "Diagram index out of bounds, the app is probably going to crash");
         }
+        String diagramFilename = mContext.getResources().getStringArray(R.array.diagrams_filenames)[diagramIndex];
 
-        public int getSize() {
-            return lineMap.size();
-        }
-
-        public double[][] getAllKeyVals() {
-            double[][] allVals = new double[lineMap.size()][2];
-            int i = 0;
-            for (Double j : lineMap.keySet()) {
-                allVals[i][0] = j;
-                allVals[i][1] = lineMap.get(j);
-                i++;
-            }
-            return allVals;
-        }
-
-        public void putValsInTree(double x, double y) {
-            lineMap.put(x, y);
-        }
-    }
-
-    public void createGraph() {
         try (
                 BufferedReader buffer = new BufferedReader(
                         new InputStreamReader(mContext.getAssets().open(
-                                "databases/" + mDiagramName + ".csv")))
+                                diagramFilename)))
         ) {
-            String line = "";
-
-            // Get first line of csv and store in firstLineCSV
-            // Parse into mLineNames
-            line = buffer.readLine();
+            // Parse the first line in the csv into names
+            String line = buffer.readLine();
             String[] tokens = line.split(",");
             mLineNames = Arrays.copyOfRange(tokens, 1, tokens.length);
             mLength = mLineNames.length;
 
-
-            // Create a new treeMap array based on how many 'y' values are found on each line of csv
-            treeMapArray = new treeClass[tokens.length - 1];
-            for (int i = 0; i < treeMapArray.length; i++) {
-                treeMapArray[i] = new treeClass();
+            // Create and initialize the array based on the number of lines to be drawn
+            mLineMaps = new LineMap[mLength];
+            for (int i = 0; i < mLength; i++) {
+                mLineMaps[i] = new LineMap();
             }
 
+            // Read from each csv line into the lineMaps
             while ((line = buffer.readLine()) != null) {
                 tokens = line.split(",");
-
-                for (int i = 0; i < tokens.length - 1; i++) {
-                    treeMapArray[i].putValsInTree(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[i + 1]));
+                try {
+                    Double xValue = Double.parseDouble(tokens[0]);
+                    for (int i = 0; i < mLength; i++) {
+                        try {
+                            Double yValue = Double.parseDouble(tokens[i + 1]);
+                            mLineMaps[i].put(xValue, yValue);
+                        } catch (NumberFormatException e) {
+                            Log.w(LOG_TAG, "CSV is missing a Y value", e);
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e(LOG_TAG, "CSV is missing a X value", e);
                 }
             }
-
         } catch (IOException e) {
-            // TODO: Something at least
+            Log.e(LOG_TAG, diagramFilename + " failed to open", e);
         }
     }
+
 
     public String getLineName(int i) {
         return mLineNames[i];
     }
 
-    public int getLength(){
+    public int getLength() {
         return mLength;
     }
 
-    public treeClass[] getTreeMap() {
-        return treeMapArray;
+    public LineMap[] getTreeMap() {
+        return mLineMaps;
     }
 
-    public treeClass getPoints(int i){ return treeMapArray[i];}
+    public LineMap getLineMap(int i) {
+        return mLineMaps[i];
+    }
 
+    public class LineMap extends TreeMap<Double, Double> {
+        public DataPoint[] getDataPoints() {
+            DataPoint[] dataPoints = new DataPoint[this.size()];
+            int i = 0;
+            for (Double j : this.keySet()) {
+                dataPoints[i] = new DataPoint(j, this.get(j));
+                i++;
+            }
+            return dataPoints;
+        }
+    }
 }

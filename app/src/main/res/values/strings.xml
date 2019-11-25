@@ -10,6 +10,18 @@
         <item>D8</item>
     </string-array>
 
+    <string-array name="diagrams_filenames">
+        <item>databases/d2.csv</item>
+        <item>databases/d3.csv</item>
+        <item>databases/d4.csv</item>
+        <item>databases/d5.csv</item>
+        <item>databases/d6.csv</item>
+        <item>databases/d7.csv</item>
+        <item>databases/d8.csv</item>
+    </string-array>
+
+    <string name="button_main_go">Go</string>
+    <string name="invalid_calc">"--.--"</string>
     <!--mock stuff below-->
     <string name="ratio_hint">Enter Ratio</string>
 
