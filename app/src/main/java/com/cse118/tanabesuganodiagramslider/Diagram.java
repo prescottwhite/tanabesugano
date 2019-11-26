@@ -82,7 +82,7 @@ public class Diagram {
         return mLength;
     }
 
-    public LineMap[] getTreeMap() {
+    public LineMap[] getLineMaps() {
         return mLineMaps;
     }
 

@@ -179,7 +179,7 @@ public class DiagramFragment extends Fragment {
 
     private double[] getNearKeyValue(double key, int line) {
         double[] pair = new double[2];
-        Diagram.LineMap[] treeMap = mDiagram.getTreeMap();
+        Diagram.LineMap[] treeMap = mDiagram.getLineMaps();
         Map.Entry<Double, Double> entry;
 
         try {
