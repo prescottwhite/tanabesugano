@@ -30,6 +30,8 @@ public class DiagramFragment extends Fragment {
     private static int DIAGRAM_MAX_Y = 80;
     private static int RULER_THICKNESS = 15;
 
+    private int mGroundState;
+    private int mGroundState2;
 
     private Context mContext;
     private Diagram mDiagram;
@@ -95,6 +97,8 @@ public class DiagramFragment extends Fragment {
 
         int diagramIndex = getArguments().getInt(DIAGRAM_INDEX, 0);
         mDiagram = new Diagram(diagramIndex, mContext);
+        mGroundState = mDiagram.getGroundState();
+        mGroundState2 = mDiagram.getGroudState2();
 
         mLineColors = view.getResources().getIntArray(R.array.lineColors);
         mPrimaryColor = ContextCompat.getColor(mContext, R.color.colorBlack);
@@ -122,12 +126,15 @@ public class DiagramFragment extends Fragment {
     private void generateGraph(Diagram diagram){
         // Draw Lines
         for (int i = 0; i < diagram.getLength(); i++) {
-            DataPoint[] dataPoints = diagram.getLineMap(i).getDataPoints();
-            LineGraphSeries<DataPoint> lineGraphSeries = new LineGraphSeries<>(dataPoints);
+            Diagram.LineMap lineMap = diagram.getLineMap(i);
+            if (lineMap.getStateNumber() == mGroundState) {
+                DataPoint[] dataPoints = lineMap.getDataPoints();
+                LineGraphSeries<DataPoint> lineGraphSeries = new LineGraphSeries<>(dataPoints);
 
-            mGraph.addSeries(lineGraphSeries);
-            int colorIndex = i % mLineColors.length;
-            lineGraphSeries.setColor(mLineColors[colorIndex]);
+                mGraph.addSeries(lineGraphSeries);
+                int colorIndex = i % mLineColors.length;
+                lineGraphSeries.setColor(mLineColors[colorIndex]);
+            }
         }
 
         // Set Viewport
@@ -179,14 +186,14 @@ public class DiagramFragment extends Fragment {
 
     private double[] getNearKeyValue(double key, int line) {
         double[] pair = new double[2];
-        Diagram.LineMap[] treeMap = mDiagram.getTreeMap();
+        Diagram.LineMap lineMap = mDiagram.getLineMap(line);
         Map.Entry<Double, Double> entry;
 
         try {
-            entry = treeMap[line].ceilingEntry(key);
+            entry = lineMap.ceilingEntry(key);
         }
         catch (NullPointerException e) {
-            entry = treeMap[line].floorEntry(key);
+            entry = lineMap.floorEntry(key);
         }
 
         pair[0] = entry.getKey();
