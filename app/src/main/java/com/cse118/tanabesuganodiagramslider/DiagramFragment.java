@@ -104,7 +104,7 @@ public class DiagramFragment extends Fragment {
         mEditRatio = view.findViewById(R.id.editRatio);
         mGraph = view.findViewById(R.id.graph);
         mSeekBar = view.findViewById(R.id.seek_x);
-        mHidden = view.findViewById(R.id.ll_main_hidden);
+        mHidden = view.findViewById(R.id.ll_main_radioGroup);
         mChoices = view.findViewById(R.id.rg_main_choices);
         mSeekBar = view.findViewById(R.id.seek_x);
 
@@ -199,12 +199,8 @@ public class DiagramFragment extends Fragment {
         return (double) raw / 10;
     }
 
-    private void generateRatio(int progress) {
+    private void generateRatio(int progress, int line1, int line2) {
         mGraph.removeSeries(mVirturalRuler);
-
-        // These need to be selectable
-        int line1 = 0;
-        int line2 = 2;
 
         // Divide progress by 10 and cast to double
         double xKey = convertX(progress);

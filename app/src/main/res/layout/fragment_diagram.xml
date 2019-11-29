@@ -32,44 +32,43 @@
         android:progress="150"
         android:progressTint="#00FFFFFF" />
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/ll_main_scrollViews"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollIndicators="none"
-        android:scrollbarStyle="outsideOverlay">
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/ll_main_hidden"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:scrollIndicators="none"
+            android:scrollbarStyle="outsideOverlay">
 
-            <RadioGroup
-                android:id="@+id/rg_main_choices"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-
-            <Switch
-                android:id="@+id/switch1"
+            <LinearLayout
+                android:id="@+id/ll_main_radioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/switch_1" />
+                android:orientation="vertical">
 
-            <Switch
-                android:id="@+id/switch2"
+                <RadioGroup
+                    android:id="@+id/rg_main_choices"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+            </LinearLayout>
+        </ScrollView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll_main_ratios"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/switch_2" />
-
-            <ToggleButton
-                android:id="@+id/toggleButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-    </ScrollView>
+                android:orientation="vertical" />
+        </ScrollView>
+    </LinearLayout>
 
 </LinearLayout>
