@@ -1,6 +1,7 @@
 package com.cse118.tanabesuganodiagramslider;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -92,7 +93,10 @@ public class DiagramFragment extends Fragment {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             mIsShowOtherGround = b;
-            // generateGraph(mDiagram);
+            int temp = mGroundState2;
+            mGroundState2 = mGroundState;
+            mGroundState = temp;
+            generateGraph(mDiagram);
         }
     };
 
@@ -162,10 +166,14 @@ public class DiagramFragment extends Fragment {
             if (shouldDraw(i)) {
                 DataPoint[] dataPoints = lineMap.getDataPoints();
                 LineGraphSeries<DataPoint> lineGraphSeries = new LineGraphSeries<>(dataPoints);
-
                 mGraph.addSeries(lineGraphSeries);
-                int colorIndex = i % mLineColors.length;
-                lineGraphSeries.setColor(mLineColors[colorIndex]);
+
+                if (lineMap.getStateNumber() == mGroundState2) {
+                    lineGraphSeries.setColor(Color.GRAY);
+                } else {
+                    int colorIndex = i % mLineColors.length;
+                    lineGraphSeries.setColor(mLineColors[colorIndex]);
+                }
             }
         }
 
@@ -206,8 +214,8 @@ public class DiagramFragment extends Fragment {
     }
 
     private Boolean shouldDraw(int i) {
-        return mIsShowAllStates || mDiagram.getLineMap(i).getStateNumber() == mGroundState;
-
+        int state = mDiagram.getLineMap(i).getStateNumber();
+        return mIsShowAllStates || state == mGroundState || state == mGroundState2;
     }
 
     private void hideDetails() {
