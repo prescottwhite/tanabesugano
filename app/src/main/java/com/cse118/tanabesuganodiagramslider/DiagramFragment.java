@@ -1,16 +1,20 @@
 package com.cse118.tanabesuganodiagramslider;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -30,6 +34,10 @@ public class DiagramFragment extends Fragment {
     private static int DIAGRAM_MAX_Y = 80;
     private static int RULER_THICKNESS = 15;
 
+    private int mGroundState;
+    private int mGroundState2;
+    private Boolean mIsShowAllStates;
+    private Boolean mIsShowOtherGround;
 
     private Context mContext;
     private Diagram mDiagram;
@@ -42,6 +50,9 @@ public class DiagramFragment extends Fragment {
     private SeekBar mSeekBar;
     private LinearLayout mHidden;
     private RadioGroup mChoices;
+    private Switch mToggleGround;
+    private ToggleButton mToggleSpin;
+
 
     private LineGraphSeries<DataPoint> mVirturalRuler;
     private LineGraphSeries<DataPoint> mCalculateRuler;
@@ -78,6 +89,26 @@ public class DiagramFragment extends Fragment {
         }
     };
 
+    private final CompoundButton.OnCheckedChangeListener mGroundToggleListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            mIsShowOtherGround = b;
+            int temp = mGroundState2;
+            mGroundState2 = mGroundState;
+            mGroundState = temp;
+            generateGraph(mDiagram);
+        }
+    };
+
+    private final CompoundButton.OnCheckedChangeListener mSpinToggleListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            mIsShowAllStates = b;
+            generateGraph(mDiagram);
+            setUpRadioButtons(mDiagram);
+        }
+    };
+
     public static DiagramFragment newInstance(int diagramIndex) {
         DiagramFragment fragment = new DiagramFragment();
         Bundle args = new Bundle();
@@ -95,6 +126,10 @@ public class DiagramFragment extends Fragment {
 
         int diagramIndex = getArguments().getInt(DIAGRAM_INDEX, 0);
         mDiagram = new Diagram(diagramIndex, mContext);
+        mGroundState = mDiagram.getGroundState();
+        mGroundState2 = mDiagram.getGroudState2();
+        mIsShowAllStates = false;
+        mIsShowOtherGround = false;
 
         mLineColors = view.getResources().getIntArray(R.array.lineColors);
         mPrimaryColor = ContextCompat.getColor(mContext, R.color.colorBlack);
@@ -107,12 +142,16 @@ public class DiagramFragment extends Fragment {
         mHidden = view.findViewById(R.id.ll_main_hidden);
         mChoices = view.findViewById(R.id.rg_main_choices);
         mSeekBar = view.findViewById(R.id.seek_x);
+        mToggleGround = view.findViewById(R.id.toggle_diagram_ground);
+        mToggleSpin = view.findViewById(R.id.toggle_diagram_spin);
 
 
         generateGraph(mDiagram);
         setUpRadioButtons(mDiagram);
         mSeekBar.setOnSeekBarChangeListener(mSeekBarListener);
         mChoices.setOnCheckedChangeListener(mLineChoiceChangeListener);
+        mToggleGround.setOnCheckedChangeListener(mGroundToggleListener);
+        mToggleSpin.setOnCheckedChangeListener(mSpinToggleListener);
 
         mProgress = -1;
 
@@ -120,14 +159,22 @@ public class DiagramFragment extends Fragment {
     }
 
     private void generateGraph(Diagram diagram){
+        mGraph.removeAllSeries();
         // Draw Lines
         for (int i = 0; i < diagram.getLength(); i++) {
-            DataPoint[] dataPoints = diagram.getLineMap(i).getDataPoints();
-            LineGraphSeries<DataPoint> lineGraphSeries = new LineGraphSeries<>(dataPoints);
+            Diagram.LineMap lineMap = diagram.getLineMap(i);
+            if (shouldDraw(i)) {
+                DataPoint[] dataPoints = lineMap.getDataPoints();
+                LineGraphSeries<DataPoint> lineGraphSeries = new LineGraphSeries<>(dataPoints);
+                mGraph.addSeries(lineGraphSeries);
 
-            mGraph.addSeries(lineGraphSeries);
-            int colorIndex = i % mLineColors.length;
-            lineGraphSeries.setColor(mLineColors[colorIndex]);
+                if (lineMap.getStateNumber() == mGroundState2) {
+                    lineGraphSeries.setColor(Color.GRAY);
+                } else {
+                    int colorIndex = i % mLineColors.length;
+                    lineGraphSeries.setColor(mLineColors[colorIndex]);
+                }
+            }
         }
 
         // Set Viewport
@@ -153,14 +200,22 @@ public class DiagramFragment extends Fragment {
     }
 
     private void setUpRadioButtons(Diagram diagram) {
+        mChoices.removeAllViewsInLayout();
         for (int i = 0; i < diagram.getLength(); i++) {
-            RadioButton newButton = new RadioButton(mContext);
-            newButton.setText(diagram.getLineName(i));
-            newButton.setId(i);
-            int colorIndex = i % mLineColors.length;
-            newButton.setTextColor(mLineColors[colorIndex]);
-            mChoices.addView(newButton);
+            if (shouldDraw(i)) {
+                RadioButton newButton = new RadioButton(mContext);
+                newButton.setText(diagram.getLineName(i));
+                newButton.setId(i);
+                int colorIndex = i % mLineColors.length;
+                newButton.setTextColor(mLineColors[colorIndex]);
+                mChoices.addView(newButton);
+            }
         }
+    }
+
+    private Boolean shouldDraw(int i) {
+        int state = mDiagram.getLineMap(i).getStateNumber();
+        return mIsShowAllStates || state == mGroundState || state == mGroundState2;
     }
 
     private void hideDetails() {
@@ -179,14 +234,14 @@ public class DiagramFragment extends Fragment {
 
     private double[] getNearKeyValue(double key, int line) {
         double[] pair = new double[2];
-        Diagram.LineMap[] treeMap = mDiagram.getLineMaps();
+        Diagram.LineMap lineMap = mDiagram.getLineMap(line);
         Map.Entry<Double, Double> entry;
 
         try {
-            entry = treeMap[line].ceilingEntry(key);
+            entry = lineMap.ceilingEntry(key);
         }
         catch (NullPointerException e) {
-            entry = treeMap[line].floorEntry(key);
+            entry = lineMap.floorEntry(key);
         }
 
         pair[0] = entry.getKey();
