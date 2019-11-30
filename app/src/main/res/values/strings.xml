@@ -22,6 +22,8 @@
 
     <string name="button_main_go">Go</string>
     <string name="invalid_calc">"--.--"</string>
+    <string name="toggle_diagram_spin">Show spin forbidden</string>
+    <string name="toggle_diagram_ground">Toggle ground state</string>
     <!--mock stuff below-->
     <string name="ratio_hint">Enter Ratio</string>
 
