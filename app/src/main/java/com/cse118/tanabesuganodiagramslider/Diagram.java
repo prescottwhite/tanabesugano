@@ -67,15 +67,15 @@ public class Diagram {
                 tokens = line.split(",");
                 try {
                     Double xValue = Double.parseDouble(tokens[0]);
-                    for (int i = 0; i < mLength; i++) {
+                    for (int i = 1; i < tokens.length; i++) {
                         try {
-                            Double yValue = Double.parseDouble(tokens[i + 1]);
-                            mLineMaps[i].put(xValue, yValue);
+                            Double yValue = Double.parseDouble(tokens[i]);
+                            mLineMaps[i - 1].put(xValue, yValue);
                             if (xValue > 0 && yValue == 0) {
-                                setGroundState(mLineMaps[i].getStateNumber());
+                                setGroundState(mLineMaps[i - 1].getStateNumber());
                             }
                         } catch (NumberFormatException e) {
-                            Log.w(LOG_TAG, "CSV is missing a Y value", e);
+                            Log.w(LOG_TAG, "CSV is missing a Y value");
                         }
                     }
                 } catch (NumberFormatException e) {
