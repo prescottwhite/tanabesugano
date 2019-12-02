@@ -14,15 +14,10 @@
 
         <Spinner
             android:id="@+id/select_diagram"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:spinnerMode="dropdown" />
 
-        <Button
-            android:id="@+id/btn_main_go"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_main_go" />
     </LinearLayout>
 
     <LinearLayout

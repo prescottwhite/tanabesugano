@@ -6,8 +6,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +31,6 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner mDiagramDropdown;
-    private Button mGoBtn;
 
     private DiagramFragment mDiagramFragment;
     private FragmentManager mFragmentManager;
@@ -37,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mGoBtn = findViewById(R.id.btn_main_go);
-        mGoBtn.setOnClickListener(mGoButtonClickListener);
 
         // Dropdown menu
         mDiagramDropdown = findViewById(R.id.select_diagram);
@@ -47,20 +47,20 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDiagramDropdown.setAdapter(adapter);
 
+        mDiagramDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                buildFragment(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         mFragmentManager = getSupportFragmentManager();
-
-
-        int diagram_index = mDiagramDropdown.getSelectedItemPosition();
-        buildFragment(diagram_index);
-
     }
-
-    private final View.OnClickListener mGoButtonClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            int diagram_index = mDiagramDropdown.getSelectedItemPosition();
-            buildFragment(diagram_index);
-        }
-    };
 
     private void buildFragment(int diagram_index) {
         Fragment fragment = DiagramFragment.newInstance(diagram_index);
