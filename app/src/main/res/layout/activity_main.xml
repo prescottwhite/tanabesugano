@@ -7,18 +7,12 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <Spinner
+        android:id="@+id/select_diagram"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Spinner
-            android:id="@+id/select_diagram"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:spinnerMode="dropdown" />
-
-    </LinearLayout>
+        android:layout_height="40dp"
+        android:spinnerMode="dropdown" />
 
     <LinearLayout
         android:id="@+id/fragmentcontainer_main_graph"
