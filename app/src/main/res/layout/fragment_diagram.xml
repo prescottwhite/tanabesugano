@@ -91,7 +91,7 @@
                 android:textSize="24sp" />
 
             <ListView
-                android:id="@+id/ll_main_listView"
+                android:id="@+id/lv_main_ratios"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
 

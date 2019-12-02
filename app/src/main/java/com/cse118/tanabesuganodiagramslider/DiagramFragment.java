@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -24,6 +26,7 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -49,6 +52,7 @@ public class DiagramFragment extends Fragment {
     private SeekBar mSeekBar;
     private LinearLayout mHidden;
     private RadioGroup mChoices;
+    private ListView mRatios;
     private Switch mToggleGround;
     private ToggleButton mToggleSpin;
 
@@ -67,7 +71,6 @@ public class DiagramFragment extends Fragment {
 
                 mProgress = progress;
                 generateY();
-                //generateRatio(progress);
             }
 
             @Override
@@ -78,6 +81,7 @@ public class DiagramFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 showDetails();
+                generateRatios();
             }
         };
 
@@ -85,6 +89,7 @@ public class DiagramFragment extends Fragment {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int i) {
             generateY();
+            generateRatios();
         }
     };
 
@@ -138,6 +143,7 @@ public class DiagramFragment extends Fragment {
         mSeekBar = view.findViewById(R.id.seek_x);
         mHidden = view.findViewById(R.id.ll_main_hidden);
         mChoices = view.findViewById(R.id.rg_main_choices);
+        mRatios = view.findViewById(R.id.lv_main_ratios);
         mSeekBar = view.findViewById(R.id.seek_x);
         mToggleGround = view.findViewById(R.id.toggle_diagram_ground);
         mToggleSpin = view.findViewById(R.id.toggle_diagram_spin);
@@ -251,37 +257,41 @@ public class DiagramFragment extends Fragment {
         return (double) raw / 10;
     }
 
-    private void generateRatio(int progress) {
-        mGraph.removeSeries(mVirturalRuler);
+    private void generateRatios() {
+        int lineIndex = mChoices.getCheckedRadioButtonId();
 
-        // These need to be selectable
-        int line1 = 0;
-        int line2 = 2;
+        if (lineIndex >= 0 && mProgress >= 0) {
+            double progressX = convertX(mProgress);
+            int diagramLength = mDiagram.getLength();
 
-        // Divide progress by 10 and cast to double
-        double xKey = convertX(progress);
+            int arraySize = diagramLength * 2;
+            double[] ratios = new double[arraySize];
+            ArrayList<String> ratioExpressions = new ArrayList<String>();
 
-        // Find closest key, value pair for a given key and line
-        double[] keyVal1 = getNearKeyValue(xKey, line1);
-        double[] keyVal2 = getNearKeyValue(xKey, line2);
+            double[] kvPairSelected = getNearKeyValue(progressX, lineIndex);
+            double[] kvPairOthers;
 
-        // Find ratio of line2 over line1
-        double ratio;
-        ratio = getRatio(keyVal2[1], keyVal1[1]);
-        if (keyVal1[1] == 0) {
-            mEditRatio.setText(R.string.invalid_calc);
-        } else if (Double.isNaN(ratio)) {
-            mEditRatio.setText(R.string.invalid_calc);
-        } else {
-            mEditRatio.setText(Double.toString(ratio));
+            String lineNameSelected = mDiagram.getLineName(lineIndex);
+            String lineNameOthers = "";
+
+            for (int i = 0; i < diagramLength; i++) {
+                if (lineIndex != i) {
+                    kvPairOthers = getNearKeyValue(progressX, i);
+                    ratios[i] = getRatio(kvPairSelected[1], kvPairOthers[1]);
+                    ratios[i + diagramLength] = getRatio(kvPairOthers[1], kvPairSelected[1]);
+
+                    lineNameOthers = mDiagram.getLineName(i);
+                }
+                if (ratios[i] != 0 && ratios[i] != Double.POSITIVE_INFINITY) {
+                    ratioExpressions.add("[" + lineNameSelected + "]" + " / " + "[" + lineNameOthers + "]" + " = " + ratios[i]);
+                    ratioExpressions.add("[" + lineNameOthers + "]" + " / " + "[" + lineNameSelected + "]" + " = " + ratios[i + diagramLength]);
+                }
+            }
+            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,
+                    android.R.layout.simple_list_item_1, ratioExpressions);
+            mRatios.setAdapter(adapter);
+
         }
-
-        mVirturalRuler = new LineGraphSeries<>(new DataPoint[]{
-                new DataPoint(keyVal2[0], 0),
-                new DataPoint(keyVal2[0], keyVal2[1])
-        });
-
-        mGraph.addSeries(mVirturalRuler);
     }
 
     private void generateY() {
