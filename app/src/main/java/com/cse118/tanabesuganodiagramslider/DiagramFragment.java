@@ -41,9 +41,10 @@ public class DiagramFragment extends Fragment {
     private GraphView mGraph;
     private SeekBar mSeekBar;
     private LinearLayout mHidden;
+    private LinearLayout mRatios;
     private RadioGroup mChoices;
 
-    private LineGraphSeries<DataPoint> mVirturalRuler;
+    private LineGraphSeries<DataPoint> mVirtualRuler;
     private LineGraphSeries<DataPoint> mCalculateRuler;
 
     private int mProgress;
@@ -57,7 +58,6 @@ public class DiagramFragment extends Fragment {
 
                 mProgress = progress;
                 generateY();
-                //generateRatio(progress);
             }
 
             @Override
@@ -68,6 +68,7 @@ public class DiagramFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 showDetails();
+                generateRatios();
             }
         };
 
@@ -75,6 +76,7 @@ public class DiagramFragment extends Fragment {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int i) {
             generateY();
+            //generateRatios();
         }
     };
 
@@ -140,11 +142,11 @@ public class DiagramFragment extends Fragment {
         viewport.setMinY(0);
         viewport.setMaxY(DIAGRAM_MAX_Y);
 
-        mVirturalRuler = new LineGraphSeries<>(
+        mVirtualRuler = new LineGraphSeries<>(
                 new DataPoint[]{});
-        mGraph.addSeries(mVirturalRuler);
-        mVirturalRuler.setColor(mPrimaryColor);
-        mVirturalRuler.setThickness(RULER_THICKNESS);
+        mGraph.addSeries(mVirtualRuler);
+        mVirtualRuler.setColor(mPrimaryColor);
+        mVirtualRuler.setThickness(RULER_THICKNESS);
 
         mCalculateRuler = new LineGraphSeries<>();
         mGraph.addSeries(mCalculateRuler);
@@ -163,18 +165,55 @@ public class DiagramFragment extends Fragment {
         }
     }
 
+    private double getRatio(double y2, double y1) {
+        double ratio = y2 / y1;
+
+        return Math.floor(ratio * 100) / 100;
+    }
+
+    private void generateRatios() {
+        int lineIndex = mChoices.getCheckedRadioButtonId();
+
+        if (lineIndex >= 0) {
+            double progressX = convertX(mProgress);
+            int diagramLength = mDiagram.getLength();
+
+            int arraySize = diagramLength * 2;
+            double[] ratios = new double[arraySize];
+            String[] ratioExpressions = new String[arraySize];
+
+            double[] kvPairSelected = getNearKeyValue(progressX, lineIndex);
+            double[] kvPairOthers;
+
+            String lineNameSelected = mDiagram.getLineName(lineIndex);
+            String lineNameOthers = "";
+
+            for (int i = 0; i < diagramLength; i++) {
+                if (lineIndex != i) {
+                    kvPairOthers = getNearKeyValue(progressX, i);
+                    ratios[i] = getRatio(kvPairSelected[1], kvPairOthers[1]);
+                    ratios[i + diagramLength] = getRatio(kvPairOthers[1], kvPairSelected[1]);
+
+                    lineNameOthers = mDiagram.getLineName(i);
+                }
+                if (ratios[i] != 0) {
+                    ratioExpressions[i] = lineNameSelected + " / " + lineNameOthers + " = " + ratios[i];
+                    ratioExpressions[i + diagramLength] = lineNameOthers + " / " + lineNameSelected + " = " + ratios[i + diagramLength];
+
+                    Log.d("TAG", "" + ratioExpressions[i]);
+                    Log.d("TAG", "" + ratioExpressions[i + diagramLength]);
+                }
+            }
+
+        }
+    }
+
     private void hideDetails() {
         mHidden.setVisibility(View.INVISIBLE);
     }
 
     private void showDetails() {
         mHidden.setVisibility(View.VISIBLE);
-    }
-
-    private double getRatio(double y2, double y1) {
-        double ratio = y2 / y1;
-
-        return Math.floor(ratio * 100) / 100;
     }
 
     private double[] getNearKeyValue(double key, int line) {
@@ -199,35 +238,6 @@ public class DiagramFragment extends Fragment {
         return (double) raw / 10;
     }
 
-    private void generateRatio(int progress, int line1, int line2) {
-        mGraph.removeSeries(mVirturalRuler);
-
-        // Divide progress by 10 and cast to double
-        double xKey = convertX(progress);
-
-        // Find closest key, value pair for a given key and line
-        double[] keyVal1 = getNearKeyValue(xKey, line1);
-        double[] keyVal2 = getNearKeyValue(xKey, line2);
-
-        // Find ratio of line2 over line1
-        double ratio;
-        ratio = getRatio(keyVal2[1], keyVal1[1]);
-        if (keyVal1[1] == 0) {
-            mEditRatio.setText(R.string.invalid_calc);
-        } else if (Double.isNaN(ratio)) {
-            mEditRatio.setText(R.string.invalid_calc);
-        } else {
-            mEditRatio.setText(Double.toString(ratio));
-        }
-
-        mVirturalRuler = new LineGraphSeries<>(new DataPoint[]{
-                new DataPoint(keyVal2[0], 0),
-                new DataPoint(keyVal2[0], keyVal2[1])
-        });
-
-        mGraph.addSeries(mVirturalRuler);
-    }
-
     private void generateY() {
         // TODO: run this onCLick for radio group
         // TODO: grey out  progress bar
@@ -244,11 +254,11 @@ public class DiagramFragment extends Fragment {
                     new DataPoint(kvPair[0], 0),
                     new DataPoint(kvPair[0], kvPair[1])
             });
-            mVirturalRuler.resetData(new DataPoint[]{
+            mVirtualRuler.resetData(new DataPoint[]{
                     new DataPoint(progressX, kvPair[1]),
                     new DataPoint(progressX, DIAGRAM_MAX_Y)});
         } else {
-            mVirturalRuler.resetData(new DataPoint[]{
+            mVirtualRuler.resetData(new DataPoint[]{
                     new DataPoint(progressX, 0),
                     new DataPoint(progressX, DIAGRAM_MAX_Y)});
         }
