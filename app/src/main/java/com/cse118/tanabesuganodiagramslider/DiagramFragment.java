@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -20,6 +22,7 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -41,8 +44,8 @@ public class DiagramFragment extends Fragment {
     private GraphView mGraph;
     private SeekBar mSeekBar;
     private LinearLayout mHidden;
-    private LinearLayout mRatios;
     private RadioGroup mChoices;
+    private ListView mRatios;
 
     private LineGraphSeries<DataPoint> mVirtualRuler;
     private LineGraphSeries<DataPoint> mCalculateRuler;
@@ -76,7 +79,7 @@ public class DiagramFragment extends Fragment {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int i) {
             generateY();
-            //generateRatios();
+            generateRatios();
         }
     };
 
@@ -109,6 +112,7 @@ public class DiagramFragment extends Fragment {
         mHidden = view.findViewById(R.id.ll_main_radioGroup);
         mChoices = view.findViewById(R.id.rg_main_choices);
         mSeekBar = view.findViewById(R.id.seek_x);
+        mRatios = view.findViewById(R.id.ll_main_listView);
 
 
         generateGraph(mDiagram);
@@ -174,13 +178,13 @@ public class DiagramFragment extends Fragment {
     private void generateRatios() {
         int lineIndex = mChoices.getCheckedRadioButtonId();
 
-        if (lineIndex >= 0) {
+        if (lineIndex >= 0 && mProgress >= 0) {
             double progressX = convertX(mProgress);
             int diagramLength = mDiagram.getLength();
 
             int arraySize = diagramLength * 2;
             double[] ratios = new double[arraySize];
-            String[] ratioExpressions = new String[arraySize];
+            ArrayList<String> ratioExpressions = new ArrayList<String>();
 
             double[] kvPairSelected = getNearKeyValue(progressX, lineIndex);
             double[] kvPairOthers;
@@ -196,14 +200,14 @@ public class DiagramFragment extends Fragment {
 
                     lineNameOthers = mDiagram.getLineName(i);
                 }
-                if (ratios[i] != 0) {
-                    ratioExpressions[i] = lineNameSelected + " / " + lineNameOthers + " = " + ratios[i];
-                    ratioExpressions[i + diagramLength] = lineNameOthers + " / " + lineNameSelected + " = " + ratios[i + diagramLength];
-
-                    Log.d("TAG", "" + ratioExpressions[i]);
-                    Log.d("TAG", "" + ratioExpressions[i + diagramLength]);
+                if (ratios[i] != 0 && ratios[i] != Double.POSITIVE_INFINITY) {
+                    ratioExpressions.add("[" + lineNameSelected + "]" + " / " + "[" + lineNameOthers + "]" + " = " + ratios[i]);
+                    ratioExpressions.add("[" + lineNameOthers + "]" + " / " + "[" + lineNameSelected + "]" + " = " + ratios[i + diagramLength]);
                 }
             }
+            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,
+                    android.R.layout.simple_list_item_1, ratioExpressions);
+            mRatios.setAdapter(adapter);
 
         }
     }
