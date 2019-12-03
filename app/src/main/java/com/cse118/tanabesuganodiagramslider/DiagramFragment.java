@@ -114,7 +114,10 @@ public class DiagramFragment extends Fragment {
             mIsShowAllStates = b;
             generateGraph(mDiagram);
             setUpRadioButtons(mDiagram);
+            if(!shouldDraw(mChoices.getCheckedRadioButtonId()))
+                mChoices.clearCheck();
             generateRatios();
+            generateY();
         }
     };
 
@@ -229,8 +232,11 @@ public class DiagramFragment extends Fragment {
     }
 
     private Boolean shouldDraw(int i) {
-        int state = mDiagram.getLineMap(i).getStateNumber();
-        return mIsShowAllStates || state == mGroundState || state == mGroundState2;
+        if(i != -1) {
+            int state = mDiagram.getLineMap(i).getStateNumber();
+            return mIsShowAllStates || state == mGroundState || state == mGroundState2;
+        }
+        return false;
     }
 
     private void hideDetails() {
