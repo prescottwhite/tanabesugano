@@ -155,6 +155,12 @@ public class DiagramFragment extends Fragment {
         mToggleGround.setOnCheckedChangeListener(mGroundToggleListener);
         mToggleSpin.setOnCheckedChangeListener(mSpinToggleListener);
 
+        if(mGroundState2 == -1){
+            mHidden.removeView(mToggleGround);
+            //mToggleGround.setVisibility(View.INVISIBLE);
+        }
+
+
         mProgress = -1;
 
         return view;
