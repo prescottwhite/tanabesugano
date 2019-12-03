@@ -49,11 +49,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <RadioGroup
-                    android:id="@+id/rg_main_choices"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
                 <Switch
                     android:id="@+id/toggle_diagram_ground"
                     android:layout_width="match_parent"
@@ -61,12 +56,17 @@
                     android:layout_marginBottom="5dp"
                     android:text="@string/toggle_diagram_ground" />
 
-                <ToggleButton
+                <Switch
                     android:id="@+id/toggle_diagram_spin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="@string/toggle_diagram_spin" />
+
+                <RadioGroup
+                    android:id="@+id/rg_main_choices"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
         </ScrollView>

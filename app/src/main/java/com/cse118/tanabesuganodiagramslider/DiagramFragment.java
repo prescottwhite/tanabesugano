@@ -16,7 +16,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Switch;
-import android.widget.ToggleButton;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -54,7 +53,7 @@ public class DiagramFragment extends Fragment {
     private RadioGroup mChoices;
     private ListView mRatios;
     private Switch mToggleGround;
-    private ToggleButton mToggleSpin;
+    private Switch mToggleSpin;
 
 
     private LineGraphSeries<DataPoint> mVirturalRuler;
