@@ -45,13 +45,13 @@
             android:hint="@string/fragment_diagram_xVal_hint"
             android:inputType="numberDecimal" />
 
-        <EditText
+        <TextView
             android:id="@+id/fragment_diagram_et_y"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:ems="10"
-            android:hint="@string/fragment_diagram_yVal_hint"
+            android:text="@string/fragment_diagram_yVal_hint"
             android:inputType="numberDecimal" />
 
     </LinearLayout>

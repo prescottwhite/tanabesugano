@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.core.content.ContextCompat;
@@ -25,6 +26,8 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
+import org.w3c.dom.Text;
 
 import java.util.Map;
 
@@ -48,7 +51,7 @@ public class DiagramFragment extends Fragment {
     private int mSecondaryColor;
 
     private EditText mEditXVal;
-    private EditText mEditYVal;
+    private TextView mEditYVal;
     private GraphView mGraph;
     private SeekBar mSeekBar;
     private LinearLayout mHidden;
@@ -150,8 +153,7 @@ public class DiagramFragment extends Fragment {
         mToggleGround = view.findViewById(R.id.toggle_diagram_ground);
         mToggleSpin = view.findViewById(R.id.toggle_diagram_spin);
 
-        setEditTextButtonXVal(mEditYVal);
-        setEditTextButtonYVal(mEditXVal);
+        setEditTextButtonXVal(mEditXVal);
 
 
         generateGraph(mDiagram);
@@ -257,8 +259,7 @@ public class DiagramFragment extends Fragment {
 
         try {
             entry = lineMap.ceilingEntry(key);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             entry = lineMap.floorEntry(key);
         }
 
@@ -271,29 +272,6 @@ public class DiagramFragment extends Fragment {
     private double convertX(int raw) {
         return (double) raw / 10;
     }
-
-    private void setEditTextButtonYVal(final EditText setup)
-    {
-        setup.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-                if (s.length() > 0)
-                {
-                    generateYGivenX(Double.parseDouble(setup.getText().toString()));
-                }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-
-            }
-
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-    }
     private void setEditTextButtonXVal(final EditText setup)
     {
         setup.addTextChangedListener(new TextWatcher() {
@@ -302,7 +280,28 @@ public class DiagramFragment extends Fragment {
                                       int count) {
                 if (s.length() > 0)
                 {
-
+                    String input = setup.getText().toString();
+                    boolean isCharacter = true;
+                    if(!Character.isDigit(input.charAt(0)))
+                    {
+                        isCharacter = false;
+                    }
+                    if(isCharacter)
+                    {
+                        Double xVal = Double.parseDouble(input);
+                        if(xVal>0 && xVal<=40)
+                        {
+                            generateYGivenX(Double.parseDouble(input));
+                        }
+                        else
+                        {
+                            mEditYVal.setText("Not Possible");
+                        }
+                    }
+                    else
+                    {
+                        mEditYVal.setText("Not Possible");
+                    }
                 }
             }
 
@@ -316,35 +315,9 @@ public class DiagramFragment extends Fragment {
             }
         });
     }
-    /*
-    private void generateXGivenY(int y)
-    {
-        Double progressX = convertX(x);
 
-        int lineIndex = mChoices.getCheckedRadioButtonId();
-        Log.i(LOG_TAG, "calculating based on radio button id: " + lineIndex);
-        if (lineIndex >= 0) {
-
-            double[] kvPair = getNearKeyValue(progressX, lineIndex);
-            mEditYVal.setText(Double.toString(kvPair[1]));
-            mEditXVal.setText("" + progressX);
-
-            mCalculateRuler.resetData(new DataPoint[]{
-                    new DataPoint(kvPair[0], 0),
-                    new DataPoint(kvPair[0], kvPair[1])
-            });
-            mVirturalRuler.resetData(new DataPoint[]{
-                    new DataPoint(progressX, kvPair[1]),
-                    new DataPoint(progressX, DIAGRAM_MAX_Y)});
-        } else {
-            mVirturalRuler.resetData(new DataPoint[]{
-                    new DataPoint(progressX, 0),
-                    new DataPoint(progressX, DIAGRAM_MAX_Y)});
-        }
-    }*/
     private void generateYGivenX(Double x)
     {
-
         int lineIndex = mChoices.getCheckedRadioButtonId();
         Log.i(LOG_TAG, "calculating based on radio button id: " + lineIndex);
         if (lineIndex >= 0) {
