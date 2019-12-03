@@ -99,6 +99,7 @@ public class DiagramFragment extends Fragment {
             mGroundState2 = mGroundState;
             mGroundState = temp;
             generateGraph(mDiagram);
+            generateRatios();
         }
     };
 
@@ -108,6 +109,7 @@ public class DiagramFragment extends Fragment {
             mIsShowAllStates = b;
             generateGraph(mDiagram);
             setUpRadioButtons(mDiagram);
+            generateRatios();
         }
     };
 
