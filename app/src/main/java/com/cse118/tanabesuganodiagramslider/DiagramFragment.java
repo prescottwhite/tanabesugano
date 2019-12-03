@@ -19,7 +19,6 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -29,8 +28,7 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import org.w3c.dom.Text;
-
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -70,25 +68,25 @@ public class DiagramFragment extends Fragment {
 
     private final SeekBar.OnSeekBarChangeListener mSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mProgress = progress;
-                Double progressX = convertX(mProgress);
-                mEditXVal.setText("" + progressX);
-                generateY();
-            }
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            mProgress = progress;
+            Double progressX = convertX(mProgress);
+            mEditXVal.setText("" + progressX);
+            generateY();
+        }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                hideDetails();
-            }
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            hideDetails();
+        }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                showDetails();
-                generateRatios();
-            }
-        };
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            showDetails();
+            generateRatios();
+        }
+    };
 
     private final RadioGroup.OnCheckedChangeListener mLineChoiceChangeListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
@@ -165,7 +163,7 @@ public class DiagramFragment extends Fragment {
         mToggleGround.setOnCheckedChangeListener(mGroundToggleListener);
         mToggleSpin.setOnCheckedChangeListener(mSpinToggleListener);
 
-        if(mGroundState2 == -1){
+        if (mGroundState2 == -1) {
             mHidden.removeView(mToggleGround);
         }
 
@@ -174,7 +172,7 @@ public class DiagramFragment extends Fragment {
         return view;
     }
 
-    private void generateGraph(Diagram diagram){
+    private void generateGraph(Diagram diagram) {
         mGraph.removeAllSeries();
         // Draw Lines
         for (int i = 0; i < diagram.getLength(); i++) {
@@ -238,8 +236,7 @@ public class DiagramFragment extends Fragment {
         int childCount = mHidden.getChildCount();
         for (int count = 0; count < childCount; count++) {
             View v = mHidden.getChildAt(count);
-            if(v!=mGraph && v!= mSeekBar)
-            {
+            if (v != mGraph && v != mSeekBar) {
                 v.setVisibility(View.INVISIBLE);
             }
         }
@@ -252,6 +249,7 @@ public class DiagramFragment extends Fragment {
             v.setVisibility(View.VISIBLE);
         }
     }
+
     private double getRatio(double y2, double y1) {
         double ratio = y2 / y1;
 
@@ -278,34 +276,26 @@ public class DiagramFragment extends Fragment {
     private double convertX(int raw) {
         return (double) raw / 10;
     }
-    private void setEditTextButtonXVal(final EditText setup)
-    {
+
+    private void setEditTextButtonXVal(final EditText setup) {
         setup.addTextChangedListener(new TextWatcher() {
 
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
-                if (s.length() > 0)
-                {
+                if (s.length() > 0) {
                     String input = setup.getText().toString();
                     boolean isCharacter = true;
-                    if(!Character.isDigit(input.charAt(0)))
-                    {
+                    if (!Character.isDigit(input.charAt(0))) {
                         isCharacter = false;
                     }
-                    if(isCharacter)
-                    {
+                    if (isCharacter) {
                         Double xVal = Double.parseDouble(input);
-                        if(xVal>0 && xVal<=40)
-                        {
+                        if (xVal > 0 && xVal <= 40) {
                             generateYGivenX(Double.parseDouble(input));
-                        }
-                        else
-                        {
+                        } else {
                             mEditYVal.setText("Not Possible");
                         }
-                    }
-                    else
-                    {
+                    } else {
                         mEditYVal.setText("Not Possible");
                     }
                 }
@@ -322,8 +312,7 @@ public class DiagramFragment extends Fragment {
         });
     }
 
-    private void generateYGivenX(Double x)
-    {
+    private void generateYGivenX(Double x) {
         int lineIndex = mChoices.getCheckedRadioButtonId();
         Log.i(LOG_TAG, "calculating based on radio button id: " + lineIndex);
         if (lineIndex >= 0) {
@@ -363,7 +352,7 @@ public class DiagramFragment extends Fragment {
             String lineNameOthers = "";
 
             for (int i = 0; i < diagramLength; i++) {
-                if(shouldDraw(i)){
+                if (shouldDraw(i)) {
                     if (lineIndex != i) {
                         kvPairOthers = getNearKeyValue(progressX, i);
                         ratios[i] = getRatio(kvPairSelected[1], kvPairOthers[1]);
