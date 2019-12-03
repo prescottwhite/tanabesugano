@@ -3,6 +3,8 @@ package com.cse118.tanabesuganodiagramslider;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +47,8 @@ public class DiagramFragment extends Fragment {
     private int mPrimaryColor;
     private int mSecondaryColor;
 
-    private EditText mEditRatio;
+    private EditText mEditXVal;
+    private EditText mEditYVal;
     private GraphView mGraph;
     private SeekBar mSeekBar;
     private LinearLayout mHidden;
@@ -67,6 +70,8 @@ public class DiagramFragment extends Fragment {
                 //mGraph.removeSeries(mVirturalRuler);
 
                 mProgress = progress;
+                Double progressX = convertX(mProgress);
+                mEditXVal.setText("" + progressX);
                 generateY();
                 //generateRatio(progress);
             }
@@ -135,8 +140,8 @@ public class DiagramFragment extends Fragment {
         mPrimaryColor = ContextCompat.getColor(mContext, R.color.colorBlack);
         mSecondaryColor = ContextCompat.getColor(mContext, R.color.colorGrey);
 
-
-        mEditRatio = view.findViewById(R.id.editRatio);
+        mEditXVal = view.findViewById(R.id.fragment_diagram_et_DeltaOverB);
+        mEditYVal = view.findViewById(R.id.fragment_diagram_et_y);
         mGraph = view.findViewById(R.id.graph);
         mSeekBar = view.findViewById(R.id.seek_x);
         mHidden = view.findViewById(R.id.ll_main_hidden);
@@ -144,6 +149,9 @@ public class DiagramFragment extends Fragment {
         mSeekBar = view.findViewById(R.id.seek_x);
         mToggleGround = view.findViewById(R.id.toggle_diagram_ground);
         mToggleSpin = view.findViewById(R.id.toggle_diagram_spin);
+
+        setEditTextButtonXVal(mEditYVal);
+        setEditTextButtonYVal(mEditXVal);
 
 
         generateGraph(mDiagram);
@@ -219,13 +227,23 @@ public class DiagramFragment extends Fragment {
     }
 
     private void hideDetails() {
-        mHidden.setVisibility(View.INVISIBLE);
+        int childCount = mHidden.getChildCount();
+        for (int count = 0; count < childCount; count++) {
+            View v = mHidden.getChildAt(count);
+            if(v!=mGraph && v!= mSeekBar)
+            {
+                v.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     private void showDetails() {
-        mHidden.setVisibility(View.VISIBLE);
+        int childCount = mHidden.getChildCount();
+        for (int count = 0; count < childCount; count++) {
+            View v = mHidden.getChildAt(count);
+            v.setVisibility(View.VISIBLE);
+        }
     }
-
     private double getRatio(double y2, double y1) {
         double ratio = y2 / y1;
 
@@ -254,37 +272,98 @@ public class DiagramFragment extends Fragment {
         return (double) raw / 10;
     }
 
-    private void generateRatio(int progress) {
-        mGraph.removeSeries(mVirturalRuler);
+    private void setEditTextButtonYVal(final EditText setup)
+    {
+        setup.addTextChangedListener(new TextWatcher() {
 
-        // These need to be selectable
-        int line1 = 0;
-        int line2 = 2;
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                if (s.length() > 0)
+                {
+                    generateYGivenX(Double.parseDouble(setup.getText().toString()));
+                }
+            }
 
-        // Divide progress by 10 and cast to double
-        double xKey = convertX(progress);
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
 
-        // Find closest key, value pair for a given key and line
-        double[] keyVal1 = getNearKeyValue(xKey, line1);
-        double[] keyVal2 = getNearKeyValue(xKey, line2);
+            }
 
-        // Find ratio of line2 over line1
-        double ratio;
-        ratio = getRatio(keyVal2[1], keyVal1[1]);
-        if (keyVal1[1] == 0) {
-            mEditRatio.setText(R.string.invalid_calc);
-        } else if (Double.isNaN(ratio)) {
-            mEditRatio.setText(R.string.invalid_calc);
-        } else {
-            mEditRatio.setText(Double.toString(ratio));
-        }
+            public void afterTextChanged(Editable s) {
 
-        mVirturalRuler = new LineGraphSeries<>(new DataPoint[]{
-                new DataPoint(keyVal2[0], 0),
-                new DataPoint(keyVal2[0], keyVal2[1])
+            }
         });
+    }
+    private void setEditTextButtonXVal(final EditText setup)
+    {
+        setup.addTextChangedListener(new TextWatcher() {
 
-        mGraph.addSeries(mVirturalRuler);
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                if (s.length() > 0)
+                {
+
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+
+            }
+
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+    /*
+    private void generateXGivenY(int y)
+    {
+        Double progressX = convertX(x);
+
+        int lineIndex = mChoices.getCheckedRadioButtonId();
+        Log.i(LOG_TAG, "calculating based on radio button id: " + lineIndex);
+        if (lineIndex >= 0) {
+
+            double[] kvPair = getNearKeyValue(progressX, lineIndex);
+            mEditYVal.setText(Double.toString(kvPair[1]));
+            mEditXVal.setText("" + progressX);
+
+            mCalculateRuler.resetData(new DataPoint[]{
+                    new DataPoint(kvPair[0], 0),
+                    new DataPoint(kvPair[0], kvPair[1])
+            });
+            mVirturalRuler.resetData(new DataPoint[]{
+                    new DataPoint(progressX, kvPair[1]),
+                    new DataPoint(progressX, DIAGRAM_MAX_Y)});
+        } else {
+            mVirturalRuler.resetData(new DataPoint[]{
+                    new DataPoint(progressX, 0),
+                    new DataPoint(progressX, DIAGRAM_MAX_Y)});
+        }
+    }*/
+    private void generateYGivenX(Double x)
+    {
+
+        int lineIndex = mChoices.getCheckedRadioButtonId();
+        Log.i(LOG_TAG, "calculating based on radio button id: " + lineIndex);
+        if (lineIndex >= 0) {
+
+            double[] kvPair = getNearKeyValue(x, lineIndex);
+            mEditYVal.setText("" + kvPair[1]);
+
+            mCalculateRuler.resetData(new DataPoint[]{
+                    new DataPoint(kvPair[0], 0),
+                    new DataPoint(kvPair[0], kvPair[1])
+            });
+            mVirturalRuler.resetData(new DataPoint[]{
+                    new DataPoint(x, kvPair[1]),
+                    new DataPoint(x, DIAGRAM_MAX_Y)});
+        } else {
+            mVirturalRuler.resetData(new DataPoint[]{
+                    new DataPoint(x, 0),
+                    new DataPoint(x, DIAGRAM_MAX_Y)});
+        }
     }
 
     private void generateY() {
@@ -297,7 +376,9 @@ public class DiagramFragment extends Fragment {
         if (lineIndex >= 0) {
 
             double[] kvPair = getNearKeyValue(progressX, lineIndex);
-            mEditRatio.setText(Double.toString(kvPair[1]));
+
+            mEditYVal.setText(Double.toString(kvPair[1]));
+            mEditXVal.setText("" + progressX);
 
             mCalculateRuler.resetData(new DataPoint[]{
                     new DataPoint(kvPair[0], 0),
