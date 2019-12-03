@@ -66,8 +66,6 @@ public class DiagramFragment extends Fragment {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                //mGraph.removeSeries(mVirturalRuler);
-
                 mProgress = progress;
                 generateY();
             }
@@ -159,11 +157,9 @@ public class DiagramFragment extends Fragment {
 
         if(mGroundState2 == -1){
             mHidden.removeView(mToggleGround);
-            //mToggleGround.setVisibility(View.INVISIBLE);
         }
 
-
-        mProgress = -1;
+        mProgress = mSeekBar.getProgress();
 
         return view;
     }
@@ -304,8 +300,6 @@ public class DiagramFragment extends Fragment {
     }
 
     private void generateY() {
-        // TODO: run this onCLick for radio group
-        // TODO: grey out  progress bar
         Double progressX = convertX(mProgress);
 
         int lineIndex = mChoices.getCheckedRadioButtonId();
