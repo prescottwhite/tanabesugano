@@ -37,7 +37,6 @@ public class DiagramFragment extends Fragment {
     private int mGroundState;
     private int mGroundState2;
     private Boolean mIsShowAllStates;
-    private Boolean mIsShowOtherGround;
 
     private Context mContext;
     private Diagram mDiagram;
@@ -92,7 +91,6 @@ public class DiagramFragment extends Fragment {
     private final CompoundButton.OnCheckedChangeListener mGroundToggleListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-            mIsShowOtherGround = b;
             int temp = mGroundState2;
             mGroundState2 = mGroundState;
             mGroundState = temp;
@@ -127,9 +125,8 @@ public class DiagramFragment extends Fragment {
         int diagramIndex = getArguments().getInt(DIAGRAM_INDEX, 0);
         mDiagram = new Diagram(diagramIndex, mContext);
         mGroundState = mDiagram.getGroundState();
-        mGroundState2 = mDiagram.getGroudState2();
+        mGroundState2 = mDiagram.getGroundState2();
         mIsShowAllStates = false;
-        mIsShowOtherGround = false;
 
         mLineColors = view.getResources().getIntArray(R.array.lineColors);
         mPrimaryColor = ContextCompat.getColor(mContext, R.color.colorBlack);

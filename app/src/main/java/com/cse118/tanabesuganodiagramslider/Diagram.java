@@ -8,7 +8,6 @@ import com.jjoe64.graphview.series.DataPoint;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
 
@@ -21,7 +20,6 @@ public class Diagram {
 
     private String[] mLineNames;
     private LineMap[] mLineMaps;
-    private TreeMap<Integer, ArrayList<LineMap>> mLineMapsMap;
 
     private int mGroundState;
     private int mGroundState2;
@@ -55,7 +53,6 @@ public class Diagram {
 
             // Create and initialize the array based on the number of lines to be drawn
             mLineMaps = new LineMap[mLength];
-            mLineMapsMap = new TreeMap<>();
             for (int i = 0; i < mLength; i++) {
                 // Parse names to get stateNumber
                 int stateNumber = Character.getNumericValue(mLineNames[i].charAt(0));
@@ -67,15 +64,15 @@ public class Diagram {
                 tokens = line.split(",");
                 try {
                     Double xValue = Double.parseDouble(tokens[0]);
-                    for (int i = 0; i < mLength; i++) {
+                    for (int i = 1; i < tokens.length; i++) {
                         try {
-                            Double yValue = Double.parseDouble(tokens[i + 1]);
-                            mLineMaps[i].put(xValue, yValue);
+                            double yValue = Double.parseDouble(tokens[i]);
+                            mLineMaps[i - 1].put(xValue, yValue);
                             if (xValue > 0 && yValue == 0) {
-                                setGroundState(mLineMaps[i].getStateNumber());
+                                setGroundState(mLineMaps[i - 1].getStateNumber());
                             }
                         } catch (NumberFormatException e) {
-                            Log.w(LOG_TAG, "CSV is missing a Y value", e);
+                            Log.w(LOG_TAG, "CSV is missing a Y value");
                         }
                     }
                 } catch (NumberFormatException e) {
@@ -101,7 +98,7 @@ public class Diagram {
         }
     }
 
-    public int getGroudState2() {
+    public int getGroundState2() {
         return mGroundState2;
     }
 
@@ -120,9 +117,9 @@ public class Diagram {
 
 
     public class LineMap extends TreeMap<Double, Double> {
-        private int mStateNumber;
+        private final int mStateNumber;
 
-        public LineMap(int stateNumber) {
+        LineMap(int stateNumber) {
             super();
             mStateNumber = stateNumber;
         }
@@ -135,8 +132,12 @@ public class Diagram {
             DataPoint[] dataPoints = new DataPoint[this.size()];
             int i = 0;
             for (Double j : this.keySet()) {
-                dataPoints[i] = new DataPoint(j, this.get(j));
-                i++;
+                if (this.get(j) != null) {
+                    dataPoints[i] = new DataPoint(j, this.get(j));
+                    i++;
+                } else {
+                    Log.e(LOG_TAG, "LineMap getDataPoints has a null value at j = " + j);
+                }
             }
             return dataPoints;
         }
