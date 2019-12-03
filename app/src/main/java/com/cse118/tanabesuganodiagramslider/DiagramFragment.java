@@ -143,7 +143,7 @@ public class DiagramFragment extends Fragment {
         mSecondaryColor = ContextCompat.getColor(mContext, R.color.colorGrey);
 
         mEditXVal = view.findViewById(R.id.fragment_diagram_et_DeltaOverB);
-        mEditYVal = view.findViewById(R.id.fragment_diagram_et_y);
+        mEditYVal = view.findViewById(R.id.fragment_diagram_et_val);
         mGraph = view.findViewById(R.id.graph);
         mSeekBar = view.findViewById(R.id.seek_x);
         mHidden = view.findViewById(R.id.ll_main_hidden);
