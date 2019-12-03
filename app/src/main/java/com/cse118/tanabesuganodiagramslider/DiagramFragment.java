@@ -104,6 +104,7 @@ public class DiagramFragment extends Fragment {
             mGroundState = temp;
             generateGraph(mDiagram);
             generateRatios();
+            generateY();
         }
     };
 
