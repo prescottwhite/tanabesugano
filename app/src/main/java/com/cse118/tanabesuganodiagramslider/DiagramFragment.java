@@ -307,8 +307,8 @@ public class DiagramFragment extends Fragment {
             mEditRatio.setText(Double.toString(kvPair[1]));
 
             mCalculateRuler.resetData(new DataPoint[]{
-                    new DataPoint(kvPair[0], 0),
-                    new DataPoint(kvPair[0], kvPair[1])
+                    new DataPoint(progressX, 0),
+                    new DataPoint(progressX, kvPair[1])
             });
             mVirturalRuler.resetData(new DataPoint[]{
                     new DataPoint(progressX, kvPair[1]),
