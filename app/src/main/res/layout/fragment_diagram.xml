@@ -6,15 +6,31 @@
     android:orientation="vertical"
     tools:context=".DiagramFragment">
 
-    <EditText
-        android:id="@+id/editRatio"
-        android:layout_width="100dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:ems="10"
-        android:gravity="left"
-        android:hint="@string/ratio_hint"
-        android:inputType="numberDecimal" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/fragment_diagram_et_DeltaOverB"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="@string/fragment_diagram_xVal_hint"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/fragment_diagram_et_y"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:ems="10"
+            android:text="@string/fragment_diagram_yVal_hint"
+            android:inputType="numberDecimal" />
+
+    </LinearLayout>
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
