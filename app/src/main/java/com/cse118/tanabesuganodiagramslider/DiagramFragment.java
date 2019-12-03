@@ -280,16 +280,18 @@ public class DiagramFragment extends Fragment {
             String lineNameOthers = "";
 
             for (int i = 0; i < diagramLength; i++) {
-                if (lineIndex != i) {
-                    kvPairOthers = getNearKeyValue(progressX, i);
-                    ratios[i] = getRatio(kvPairSelected[1], kvPairOthers[1]);
-                    ratios[i + diagramLength] = getRatio(kvPairOthers[1], kvPairSelected[1]);
+                if(shouldDraw(i)){
+                    if (lineIndex != i) {
+                        kvPairOthers = getNearKeyValue(progressX, i);
+                        ratios[i] = getRatio(kvPairSelected[1], kvPairOthers[1]);
+                        ratios[i + diagramLength] = getRatio(kvPairOthers[1], kvPairSelected[1]);
 
-                    lineNameOthers = mDiagram.getLineName(i);
-                }
-                if (ratios[i] != 0 && ratios[i] != Double.POSITIVE_INFINITY) {
-                    ratioExpressions.add("[" + lineNameSelected + "]" + " / " + "[" + lineNameOthers + "]" + " = " + ratios[i]);
-                    ratioExpressions.add("[" + lineNameOthers + "]" + " / " + "[" + lineNameSelected + "]" + " = " + ratios[i + diagramLength]);
+                        lineNameOthers = mDiagram.getLineName(i);
+                    }
+                    if (ratios[i] != 0 && ratios[i] != Double.POSITIVE_INFINITY) {
+                        ratioExpressions.add("[" + lineNameSelected + "]" + " / " + "[" + lineNameOthers + "]" + " = " + ratios[i]);
+                        ratioExpressions.add("[" + lineNameOthers + "]" + " / " + "[" + lineNameSelected + "]" + " = " + ratios[i + diagramLength]);
+                    }
                 }
             }
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,
