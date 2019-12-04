@@ -74,6 +74,7 @@ public class DiagramFragment extends Fragment {
             Double progressX = convertX(mProgress);
             mEditXVal.setText("" + progressX);
             generateY();
+            generateRatios();
         }
 
         @Override
@@ -84,7 +85,6 @@ public class DiagramFragment extends Fragment {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             showDetails();
-            generateRatios();
         }
     };
 
@@ -340,7 +340,7 @@ public class DiagramFragment extends Fragment {
                     new DataPoint(x, DIAGRAM_MAX_Y)});
         }
     }
-
+    
     private void generateRatios() {
         int lineIndex = mChoices.getCheckedRadioButtonId();
 
