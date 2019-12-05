@@ -300,27 +300,9 @@ public class DiagramFragment extends Fragment {
             public void onClick(View v) {
                 String input = setup.getText().toString();
                 boolean isCharacter = true;
-                if (input.equals("")||!Character.isDigit(input.charAt(0))) {
-                    isCharacter = false;
-                }
-                if (isCharacter) {
-                    Double xVal = Double.parseDouble(input);
-                    if (xVal > 0 && xVal <= 40) {
-                        generateYGivenX(Double.parseDouble(input));
-                    } else {
-                        mEditXVal.setText("Not Possible");
-                    }
-                } else {
-                    mEditXVal.setText("Not Possible");
-                }
-            }
-        });
-        setup.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    String input = setup.getText().toString();
-                    boolean isCharacter = true;
-                    if (!Character.isDigit(input.charAt(0))||input.equals("")) {
+                if(!input.equals(""))
+                {
+                    if (!Character.isDigit(input.charAt(0))) {
                         isCharacter = false;
                     }
                     if (isCharacter) {
@@ -336,33 +318,40 @@ public class DiagramFragment extends Fragment {
                 }
             }
         });
+        setup.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    String input = setup.getText().toString();
+                    boolean isCharacter = true;
+                    if(!input.equals(""))
+                    {
+                        if (!Character.isDigit(input.charAt(0))) {
+                            isCharacter = false;
+                        }
+                        if (isCharacter) {
+                            Double xVal = Double.parseDouble(input);
+                            if (xVal > 0 && xVal <= 40) {
+                                generateYGivenX(Double.parseDouble(input));
+                            } else {
+                                mEditXVal.setText("Not Possible");
+                            }
+                        } else {
+                            mEditXVal.setText("Not Possible");
+                        }
+                    }
+
+                }
+            }
+        });
     }
     private void setEditTextButtonYVal(final EditText setup) {
         setup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String input = setup.getText().toString();
                 boolean isCharacter = true;
-                if (input.equals("")||!Character.isDigit(input.charAt(0))) {
-                    isCharacter = false;
-                }
-                if (isCharacter) {
-                    Double xVal = Double.parseDouble(input);
-                    if (xVal > 0 && xVal <= 40) {
-                        generateXGivenY(Double.parseDouble(input));
-                    } else {
-                        mEditXVal.setText("Not Possible");
-                    }
-                } else {
-                    mEditXVal.setText("Not Possible");
-                }
-            }
-        });
-        setup.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    String input = setup.getText().toString();
-                    boolean isCharacter = true;
-                    if (!Character.isDigit(input.charAt(0))||input.equals("")) {
+                if (!input.equals(""))
+                {
+                    if(!Character.isDigit(input.charAt(0))) {
                         isCharacter = false;
                     }
                     if (isCharacter) {
@@ -375,6 +364,32 @@ public class DiagramFragment extends Fragment {
                     } else {
                         mEditXVal.setText("Not Possible");
                     }
+                }
+
+            }
+        });
+        setup.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    String input = setup.getText().toString();
+                    boolean isCharacter = true;
+                    if(!input.equals(""))
+                    {
+                        if (!Character.isDigit(input.charAt(0))) {
+                            isCharacter = false;
+                        }
+                        if (isCharacter) {
+                            Double xVal = Double.parseDouble(input);
+                            if (xVal > 0 && xVal <= 40) {
+                                generateXGivenY(Double.parseDouble(input));
+                            } else {
+                                mEditXVal.setText("Not Possible");
+                            }
+                        } else {
+                            mEditXVal.setText("Not Possible");
+                        }
+                    }
+
                 }
             }
         });
