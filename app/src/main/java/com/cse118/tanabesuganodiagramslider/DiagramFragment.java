@@ -317,10 +317,10 @@ public class DiagramFragment extends Fragment {
                         if (xVal > 0 && xVal <= 40) {
                             generateYGivenX(xVal);
                         } else {
-                            mEditXVal.setText("Not Possible");
+                            mEditXVal.setText(getString(R.string.fragment_diagram_not_possible));
                         }
                     } else {
-                        mEditXVal.setText("Not Possible");
+                        mEditXVal.setText(getString(R.string.fragment_diagram_not_possible));
                     }
                 }
             }
@@ -340,10 +340,10 @@ public class DiagramFragment extends Fragment {
                             if (xVal > 0 && xVal <= 40) {
                                 generateYGivenX(xVal);
                             } else {
-                                mEditXVal.setText("Not Possible");
+                                mEditXVal.setText(getString(R.string.fragment_diagram_not_possible));
                             }
                         } else {
-                            mEditXVal.setText("Not Possible");
+                            mEditXVal.setText(getString(R.string.fragment_diagram_not_possible));
                         }
                     }
 

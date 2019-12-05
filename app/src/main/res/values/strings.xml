@@ -27,6 +27,7 @@
     <!--mock stuff below-->
     <string name="fragment_diagram_xVal_hint">Enter Δ/B</string>
     <string name="fragment_diagram_yVal_hint">Enter E/B</string>
+    <string name="fragment_diagram_not_possible">Not Possible</string>
 
     <string name="fragment_diagram_DeltaOvrB_txt">Δ/B </string>
     <string name="fragment_diagram_eOvrB_txt">E/B = </string>
