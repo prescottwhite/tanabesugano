@@ -313,14 +313,19 @@ public class DiagramFragment extends Fragment {
                         isCharacter = false;
                     }
                     if (isCharacter) {
-                        Double xVal = Double.parseDouble(input);
-                        if (xVal > 0 && xVal <= 40) {
-                            generateYGivenX(xVal);
-                        } else {
-                            mEditXVal.setText(getString(R.string.fragment_diagram_not_possible));
+                        try {
+                            Double xVal = Double.parseDouble(input);
+                            if (xVal > 0 && xVal <= 40) {
+                                generateYGivenX(xVal);
+                            } else {
+                                mEditXVal.setText(R.string.fragment_diagram_not_possible);
+                            }
+                        }
+                        catch (Exception e) {
+                            mEditXVal.setText("");
                         }
                     } else {
-                        mEditXVal.setText(getString(R.string.fragment_diagram_not_possible));
+                        mEditXVal.setText("");
                     }
                 }
             }
@@ -336,14 +341,19 @@ public class DiagramFragment extends Fragment {
                             isCharacter = false;
                         }
                         if (isCharacter) {
-                            Double xVal = Double.parseDouble(input);
-                            if (xVal > 0 && xVal <= 40) {
-                                generateYGivenX(xVal);
-                            } else {
-                                mEditXVal.setText(getString(R.string.fragment_diagram_not_possible));
+                            try {
+                                Double xVal = Double.parseDouble(input);
+                                if (xVal > 0 && xVal <= 40) {
+                                    generateYGivenX(xVal);
+                                } else {
+                                    mEditXVal.setText(R.string.fragment_diagram_not_possible);
+                                }
+                            }
+                            catch (Exception e) {
+                                mEditXVal.setText("");
                             }
                         } else {
-                            mEditXVal.setText(getString(R.string.fragment_diagram_not_possible));
+                            mEditXVal.setText("");
                         }
                     }
 
@@ -362,14 +372,19 @@ public class DiagramFragment extends Fragment {
                         isCharacter = false;
                     }
                     if (isCharacter) {
-                        Double yVal = Double.parseDouble(input);
-                        if (yVal > 0 && yVal <= 80) {
-                            generateXGivenY(yVal);
-                        } else {
-                            mEditXVal.setText("Not Possible");
+                        try {
+                            Double yVal = Double.parseDouble(input);
+                            if (yVal > 0 && yVal <= 80) {
+                                generateXGivenY(yVal);
+                            } else {
+                                mEditXVal.setText(R.string.fragment_diagram_not_possible);
+                            }
+                        }
+                        catch (Exception e) {
+                            mEditXVal.setText("");
                         }
                     } else {
-                        mEditXVal.setText("Not Possible");
+                        mEditXVal.setText("");
                     }
                 }
 
@@ -386,14 +401,19 @@ public class DiagramFragment extends Fragment {
                             isCharacter = false;
                         }
                         if (isCharacter) {
-                            Double yVal = Double.parseDouble(input);
-                            if (yVal > 0 && yVal <= 80) {
-                                generateXGivenY(yVal);
-                            } else {
-                                mEditXVal.setText("Not Possible");
+                            try {
+                                Double yVal = Double.parseDouble(input);
+                                if (yVal > 0 && yVal <= 80) {
+                                    generateXGivenY(yVal);
+                                } else {
+                                    mEditXVal.setText(R.string.fragment_diagram_not_possible);
+                                }
+                            }
+                            catch (Exception e) {
+                                mEditXVal.setText("");
                             }
                         } else {
-                            mEditXVal.setText("Not Possible");
+                            mEditXVal.setText("");
                         }
                     }
 
