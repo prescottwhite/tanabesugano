@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -50,7 +51,7 @@ public class DiagramFragment extends Fragment {
     private int mSecondaryColor;
 
     private EditText mEditXVal;
-    private TextView mEditYVal;
+    private EditText mEditYVal;
     private GraphView mGraph;
     private SeekBar mSeekBar;
     private LinearLayout mHidden;
@@ -147,7 +148,7 @@ public class DiagramFragment extends Fragment {
         mSecondaryColor = ContextCompat.getColor(mContext, R.color.colorGrey);
 
         mEditXVal = view.findViewById(R.id.fragment_diagram_et_DeltaOverB);
-        mEditYVal = view.findViewById(R.id.fragment_diagram_et_y);
+        mEditYVal = view.findViewById(R.id.fragment_diagram_et_val);
         mGraph = view.findViewById(R.id.graph);
         mSeekBar = view.findViewById(R.id.seek_x);
         mHidden = view.findViewById(R.id.ll_main_hidden);
@@ -158,6 +159,7 @@ public class DiagramFragment extends Fragment {
         mToggleSpin = view.findViewById(R.id.toggle_diagram_spin);
 
         setEditTextButtonXVal(mEditXVal);
+        setEditTextButtonYVal(mEditYVal);
 
 
         generateGraph(mDiagram);
@@ -279,19 +281,34 @@ public class DiagramFragment extends Fragment {
 
         return pair;
     }
+    private double[] getNearValueKey(double key, int line) {
+        double[] pair = new double[2];
+        Diagram.LineMap lineMap = mDiagram.getReverseLineMap(line);
+        Map.Entry<Double, Double> entry;
+
+        try {
+            entry = lineMap.ceilingEntry(key);
+        } catch (NullPointerException e) {
+            entry = lineMap.floorEntry(key);
+        }
+
+        pair[0] = entry.getKey();
+        pair[1] = entry.getValue();
+
+        return pair;
+    }
 
     private double convertX(int raw) {
         return (double) raw / 10;
     }
 
     private void setEditTextButtonXVal(final EditText setup) {
-        setup.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-                if (s.length() > 0) {
-                    String input = setup.getText().toString();
-                    boolean isCharacter = true;
+        setup.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String input = setup.getText().toString();
+                boolean isCharacter = true;
+                if(!input.equals(""))
+                {
                     if (!Character.isDigit(input.charAt(0))) {
                         isCharacter = false;
                     }
@@ -300,21 +317,87 @@ public class DiagramFragment extends Fragment {
                         if (xVal > 0 && xVal <= 40) {
                             generateYGivenX(Double.parseDouble(input));
                         } else {
-                            mEditYVal.setText("Not Possible");
+                            mEditXVal.setText("Not Possible");
                         }
                     } else {
-                        mEditYVal.setText("Not Possible");
+                        mEditXVal.setText("Not Possible");
                     }
                 }
             }
+        });
+        setup.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    String input = setup.getText().toString();
+                    boolean isCharacter = true;
+                    if(!input.equals(""))
+                    {
+                        if (!Character.isDigit(input.charAt(0))) {
+                            isCharacter = false;
+                        }
+                        if (isCharacter) {
+                            Double xVal = Double.parseDouble(input);
+                            if (xVal > 0 && xVal <= 40) {
+                                generateYGivenX(Double.parseDouble(input));
+                            } else {
+                                mEditXVal.setText("Not Possible");
+                            }
+                        } else {
+                            mEditXVal.setText("Not Possible");
+                        }
+                    }
 
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
+                }
+            }
+        });
+    }
+    private void setEditTextButtonYVal(final EditText setup) {
+        setup.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String input = setup.getText().toString();
+                boolean isCharacter = true;
+                if (!input.equals(""))
+                {
+                    if(!Character.isDigit(input.charAt(0))) {
+                        isCharacter = false;
+                    }
+                    if (isCharacter) {
+                        Double xVal = Double.parseDouble(input);
+                        if (xVal > 0 && xVal <= 40) {
+                            generateXGivenY(Double.parseDouble(input));
+                        } else {
+                            mEditXVal.setText("Not Possible");
+                        }
+                    } else {
+                        mEditXVal.setText("Not Possible");
+                    }
+                }
 
             }
+        });
+        setup.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    String input = setup.getText().toString();
+                    boolean isCharacter = true;
+                    if(!input.equals(""))
+                    {
+                        if (!Character.isDigit(input.charAt(0))) {
+                            isCharacter = false;
+                        }
+                        if (isCharacter) {
+                            Double xVal = Double.parseDouble(input);
+                            if (xVal > 0 && xVal <= 40) {
+                                generateXGivenY(Double.parseDouble(input));
+                            } else {
+                                mEditXVal.setText("Not Possible");
+                            }
+                        } else {
+                            mEditXVal.setText("Not Possible");
+                        }
+                    }
 
-            public void afterTextChanged(Editable s) {
-
+                }
             }
         });
     }
@@ -326,6 +409,12 @@ public class DiagramFragment extends Fragment {
 
             double[] kvPair = getNearKeyValue(x, lineIndex);
             mEditYVal.setText("" + kvPair[1]);
+
+            int temp = (int)Math.round(kvPair[0]);
+            temp = temp*10;
+            mSeekBar.setMax(400);
+            mSeekBar.setProgress(temp);
+            mSeekBar.refreshDrawableState();
 
             mCalculateRuler.resetData(new DataPoint[]{
                     new DataPoint(kvPair[0], 0),
@@ -340,7 +429,34 @@ public class DiagramFragment extends Fragment {
                     new DataPoint(x, DIAGRAM_MAX_Y)});
         }
     }
-    
+
+    private void generateXGivenY(Double y) {
+        int lineIndex = mChoices.getCheckedRadioButtonId();
+        if (lineIndex >= 0) {
+
+            double[] kvPair = getNearValueKey(y, lineIndex);
+            mEditXVal.setText("" + kvPair[1]);
+
+            int temp = (int)Math.round(kvPair[1]);
+            temp = temp*10;
+            mSeekBar.setMax(400);
+            mSeekBar.setProgress(temp);
+            mSeekBar.refreshDrawableState();
+
+            mCalculateRuler.resetData(new DataPoint[]{
+                    new DataPoint(kvPair[1], 0),
+                    new DataPoint(kvPair[1], kvPair[0])
+            });
+            mVirturalRuler.resetData(new DataPoint[]{
+                    new DataPoint(kvPair[1], kvPair[0]),
+                    new DataPoint(kvPair[1], DIAGRAM_MAX_Y)});
+        } else {
+            mVirturalRuler.resetData(new DataPoint[]{
+                    new DataPoint(0, 0),
+                    new DataPoint(0, DIAGRAM_MAX_Y)});
+        }
+    }
+
     private void generateRatios() {
         int lineIndex = mChoices.getCheckedRadioButtonId();
 

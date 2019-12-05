@@ -20,6 +20,7 @@ public class Diagram {
 
     private String[] mLineNames;
     private LineMap[] mLineMaps;
+    private LineMap[] mReversePairLineMaps;
 
     private int mGroundState;
     private int mGroundState2;
@@ -58,6 +59,12 @@ public class Diagram {
                 int stateNumber = Character.getNumericValue(mLineNames[i].charAt(0));
                 mLineMaps[i] = new LineMap(stateNumber);
             }
+            mReversePairLineMaps = new LineMap[mLength];
+            for (int i = 0; i < mLength; i++) {
+                // Parse names to get stateNumber
+                int stateNumber = Character.getNumericValue(mLineNames[i].charAt(0));
+                mReversePairLineMaps[i] = new LineMap(stateNumber);
+            }
 
             // Read from each csv line into the lineMaps
             while ((line = buffer.readLine()) != null) {
@@ -68,6 +75,7 @@ public class Diagram {
                         try {
                             double yValue = Double.parseDouble(tokens[i]);
                             mLineMaps[i - 1].put(xValue, yValue);
+                            mReversePairLineMaps[i - 1].put(yValue, xValue);
                             if (xValue > 0 && yValue == 0) {
                                 setGroundState(mLineMaps[i - 1].getStateNumber());
                             }
@@ -113,6 +121,10 @@ public class Diagram {
 
     public LineMap getLineMap(int i) {
         return mLineMaps[i];
+    }
+
+    public LineMap getReverseLineMap(int i) {
+        return mReversePairLineMaps[i];
     }
 
 
