@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -50,7 +51,7 @@ public class DiagramFragment extends Fragment {
     private int mSecondaryColor;
 
     private EditText mEditXVal;
-    private TextView mEditYVal;
+    private EditText mEditYVal;
     private GraphView mGraph;
     private SeekBar mSeekBar;
     private LinearLayout mHidden;
@@ -154,6 +155,7 @@ public class DiagramFragment extends Fragment {
         mToggleSpin = view.findViewById(R.id.toggle_diagram_spin);
 
         setEditTextButtonXVal(mEditXVal);
+        setEditTextButtonYVal(mEditYVal);
 
 
         generateGraph(mDiagram);
@@ -272,6 +274,22 @@ public class DiagramFragment extends Fragment {
 
         return pair;
     }
+    private double[] getNearValueKey(double key, int line) {
+        double[] pair = new double[2];
+        Diagram.LineMap lineMap = mDiagram.getReverseLineMap(line);
+        Map.Entry<Double, Double> entry;
+
+        try {
+            entry = lineMap.ceilingEntry(key);
+        } catch (NullPointerException e) {
+            entry = lineMap.floorEntry(key);
+        }
+
+        pair[0] = entry.getKey();
+        pair[1] = entry.getValue();
+
+        return pair;
+    }
 
     private double convertX(int raw) {
         return (double) raw / 10;
@@ -311,6 +329,48 @@ public class DiagramFragment extends Fragment {
             }
         });
     }
+    private void setEditTextButtonYVal(final EditText setup) {
+        setup.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String input = setup.getText().toString();
+                boolean isCharacter = true;
+                if (!Character.isDigit(input.charAt(0))) {
+                    isCharacter = false;
+                }
+                if (isCharacter) {
+                    Double xVal = Double.parseDouble(input);
+                    if (xVal > 0 && xVal <= 40) {
+                        generateXGivenY(Double.parseDouble(input));
+                    } else {
+                        mEditXVal.setText("Not Possible");
+                    }
+                } else {
+                    mEditXVal.setText("Not Possible");
+                }
+            }
+        });
+        setup.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    String input = setup.getText().toString();
+                    boolean isCharacter = true;
+                    if (!Character.isDigit(input.charAt(0))) {
+                        isCharacter = false;
+                    }
+                    if (isCharacter) {
+                        Double xVal = Double.parseDouble(input);
+                        if (xVal > 0 && xVal <= 40) {
+                            generateXGivenY(Double.parseDouble(input));
+                        } else {
+                            mEditXVal.setText("Not Possible");
+                        }
+                    } else {
+                        mEditXVal.setText("Not Possible");
+                    }
+                }
+            }
+        });
+    }
 
     private void generateYGivenX(Double x) {
         int lineIndex = mChoices.getCheckedRadioButtonId();
@@ -331,6 +391,26 @@ public class DiagramFragment extends Fragment {
             mVirturalRuler.resetData(new DataPoint[]{
                     new DataPoint(x, 0),
                     new DataPoint(x, DIAGRAM_MAX_Y)});
+        }
+    }
+    private void generateXGivenY(Double y) {
+        int lineIndex = mChoices.getCheckedRadioButtonId();
+        if (lineIndex >= 0) {
+
+            double[] kvPair = getNearValueKey(y, lineIndex);
+            mEditXVal.setText("" + kvPair[1]);
+
+            mCalculateRuler.resetData(new DataPoint[]{
+                    new DataPoint(kvPair[0], 0),
+                    new DataPoint(kvPair[0], kvPair[1])
+            });
+            mVirturalRuler.resetData(new DataPoint[]{
+                    new DataPoint(kvPair[1], kvPair[1]),
+                    new DataPoint(kvPair[1], DIAGRAM_MAX_Y)});
+        } else {
+            mVirturalRuler.resetData(new DataPoint[]{
+                    new DataPoint(0, 0),
+                    new DataPoint(0, DIAGRAM_MAX_Y)});
         }
     }
 
