@@ -25,7 +25,7 @@
     <string name="toggle_diagram_spin">Show spin forbidden</string>
     <string name="toggle_diagram_ground">Toggle ground state</string>
     <!--mock stuff below-->
-    <string name="fragment_diagram_xVal_hint">Enter Δ/B:</string>
+    <string name="fragment_diagram_xVal_hint">Enter Δ/B</string>
     <string name="fragment_diagram_yVal_hint">Enter E/B</string>
 
     <string name="fragment_diagram_DeltaOvrB_txt">Δ/B </string>
