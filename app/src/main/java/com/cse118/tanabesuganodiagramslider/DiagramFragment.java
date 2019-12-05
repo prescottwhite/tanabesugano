@@ -315,7 +315,7 @@ public class DiagramFragment extends Fragment {
                     if (isCharacter) {
                         Double xVal = Double.parseDouble(input);
                         if (xVal > 0 && xVal <= 40) {
-                            generateYGivenX(Double.parseDouble(input));
+                            generateYGivenX(xVal);
                         } else {
                             mEditXVal.setText("Not Possible");
                         }
@@ -338,7 +338,7 @@ public class DiagramFragment extends Fragment {
                         if (isCharacter) {
                             Double xVal = Double.parseDouble(input);
                             if (xVal > 0 && xVal <= 40) {
-                                generateYGivenX(Double.parseDouble(input));
+                                generateYGivenX(xVal);
                             } else {
                                 mEditXVal.setText("Not Possible");
                             }
@@ -362,9 +362,9 @@ public class DiagramFragment extends Fragment {
                         isCharacter = false;
                     }
                     if (isCharacter) {
-                        Double xVal = Double.parseDouble(input);
-                        if (xVal > 0 && xVal <= 40) {
-                            generateXGivenY(Double.parseDouble(input));
+                        Double yVal = Double.parseDouble(input);
+                        if (yVal > 0 && yVal <= 80) {
+                            generateXGivenY(yVal);
                         } else {
                             mEditXVal.setText("Not Possible");
                         }
@@ -386,9 +386,9 @@ public class DiagramFragment extends Fragment {
                             isCharacter = false;
                         }
                         if (isCharacter) {
-                            Double xVal = Double.parseDouble(input);
-                            if (xVal > 0 && xVal <= 40) {
-                                generateXGivenY(Double.parseDouble(input));
+                            Double yVal = Double.parseDouble(input);
+                            if (yVal > 0 && yVal <= 80) {
+                                generateXGivenY(yVal);
                             } else {
                                 mEditXVal.setText("Not Possible");
                             }
