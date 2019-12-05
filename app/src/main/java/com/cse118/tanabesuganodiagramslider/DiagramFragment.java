@@ -296,14 +296,31 @@ public class DiagramFragment extends Fragment {
     }
 
     private void setEditTextButtonXVal(final EditText setup) {
-        setup.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-                if (s.length() > 0) {
+        setup.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String input = setup.getText().toString();
+                boolean isCharacter = true;
+                if (input.equals("")||!Character.isDigit(input.charAt(0))) {
+                    isCharacter = false;
+                }
+                if (isCharacter) {
+                    Double xVal = Double.parseDouble(input);
+                    if (xVal > 0 && xVal <= 40) {
+                        generateYGivenX(Double.parseDouble(input));
+                    } else {
+                        mEditXVal.setText("Not Possible");
+                    }
+                } else {
+                    mEditXVal.setText("Not Possible");
+                }
+            }
+        });
+        setup.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
                     String input = setup.getText().toString();
                     boolean isCharacter = true;
-                    if (!Character.isDigit(input.charAt(0))) {
+                    if (!Character.isDigit(input.charAt(0))||input.equals("")) {
                         isCharacter = false;
                     }
                     if (isCharacter) {
@@ -311,21 +328,12 @@ public class DiagramFragment extends Fragment {
                         if (xVal > 0 && xVal <= 40) {
                             generateYGivenX(Double.parseDouble(input));
                         } else {
-                            mEditYVal.setText("Not Possible");
+                            mEditXVal.setText("Not Possible");
                         }
                     } else {
-                        mEditYVal.setText("Not Possible");
+                        mEditXVal.setText("Not Possible");
                     }
                 }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-
-            }
-
-            public void afterTextChanged(Editable s) {
-
             }
         });
     }
@@ -334,7 +342,7 @@ public class DiagramFragment extends Fragment {
             public void onClick(View v) {
                 String input = setup.getText().toString();
                 boolean isCharacter = true;
-                if (!Character.isDigit(input.charAt(0))) {
+                if (input.equals("")||!Character.isDigit(input.charAt(0))) {
                     isCharacter = false;
                 }
                 if (isCharacter) {
@@ -354,7 +362,7 @@ public class DiagramFragment extends Fragment {
                 if(!hasFocus) {
                     String input = setup.getText().toString();
                     boolean isCharacter = true;
-                    if (!Character.isDigit(input.charAt(0))) {
+                    if (!Character.isDigit(input.charAt(0))||input.equals("")) {
                         isCharacter = false;
                     }
                     if (isCharacter) {
@@ -380,6 +388,12 @@ public class DiagramFragment extends Fragment {
             double[] kvPair = getNearKeyValue(x, lineIndex);
             mEditYVal.setText("" + kvPair[1]);
 
+            int temp = (int)Math.round(kvPair[0]);
+            temp = temp*10;
+            mSeekBar.setMax(400);
+            mSeekBar.setProgress(temp);
+            mSeekBar.refreshDrawableState();
+
             mCalculateRuler.resetData(new DataPoint[]{
                     new DataPoint(kvPair[0], 0),
                     new DataPoint(kvPair[0], kvPair[1])
@@ -400,12 +414,18 @@ public class DiagramFragment extends Fragment {
             double[] kvPair = getNearValueKey(y, lineIndex);
             mEditXVal.setText("" + kvPair[1]);
 
+            int temp = (int)Math.round(kvPair[1]);
+            temp = temp*10;
+            mSeekBar.setMax(400);
+            mSeekBar.setProgress(temp);
+            mSeekBar.refreshDrawableState();
+
             mCalculateRuler.resetData(new DataPoint[]{
-                    new DataPoint(kvPair[0], 0),
-                    new DataPoint(kvPair[0], kvPair[1])
+                    new DataPoint(kvPair[1], 0),
+                    new DataPoint(kvPair[1], kvPair[0])
             });
             mVirturalRuler.resetData(new DataPoint[]{
-                    new DataPoint(kvPair[1], kvPair[1]),
+                    new DataPoint(kvPair[1], kvPair[0]),
                     new DataPoint(kvPair[1], DIAGRAM_MAX_Y)});
         } else {
             mVirturalRuler.resetData(new DataPoint[]{
