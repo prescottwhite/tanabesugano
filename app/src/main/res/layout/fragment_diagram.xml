@@ -39,12 +39,12 @@
 
         <EditText
             android:id="@+id/fragment_diagram_et_val"
-            android:layout_width="75dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:ems="10"
-            android:inputType="numberDecimal"
-            android:hint="@string/fragment_diagram_yVal_hint" />
+            android:hint="@string/fragment_diagram_yVal_hint"
+            android:inputType="numberDecimal" />
 
     </LinearLayout>
 
